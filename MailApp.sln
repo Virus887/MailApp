@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{94DDDC94-957
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp", "src\MailApp\MailApp.csproj", "{B4A7B2C4-1476-46EF-B2C4-578E7FA97259}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{01F6CFB9-13F4-43E6-883C-936D4EF90E46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailApp.Tests", "test\MailApp.Tests\MailApp.Tests.csproj", "{444D670E-88DC-4E93-A095-E4F408278BEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +21,17 @@ Global
 		{B4A7B2C4-1476-46EF-B2C4-578E7FA97259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4A7B2C4-1476-46EF-B2C4-578E7FA97259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4A7B2C4-1476-46EF-B2C4-578E7FA97259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{444D670E-88DC-4E93-A095-E4F408278BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{444D670E-88DC-4E93-A095-E4F408278BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{444D670E-88DC-4E93-A095-E4F408278BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{444D670E-88DC-4E93-A095-E4F408278BEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B4A7B2C4-1476-46EF-B2C4-578E7FA97259} = {94DDDC94-9573-4E94-B002-9A2921F2103D}
+		{444D670E-88DC-4E93-A095-E4F408278BEA} = {01F6CFB9-13F4-43E6-883C-936D4EF90E46}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0351F75B-576F-4A58-A47F-7A1BC147F1C2}

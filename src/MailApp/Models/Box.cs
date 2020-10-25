@@ -27,7 +27,7 @@ namespace MailApp.Models
                     {
                         //komunikat czy na pewno chcesz wyslac pusta wiadomosc
                     }
-                    if (message.Notyfication)
+                    if (message.Notification)
                     {
                         //wysylanie notyfikacji
                     }
@@ -43,7 +43,7 @@ namespace MailApp.Models
             {
                 //komunikat czy na pewno chcesz wyslac pusta wiadomosc
             }
-            if (message.Notyfication)
+            if (message.Notification)
             {
                 //wysylanie notyfikacji
             }
