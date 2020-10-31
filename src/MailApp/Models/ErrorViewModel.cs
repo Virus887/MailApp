@@ -1,5 +1,3 @@
-using System;
-
 namespace MailApp.Models
 {
     public class ErrorViewModel

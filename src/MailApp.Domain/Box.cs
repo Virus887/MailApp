@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace MailApp.Models
+namespace MailApp.Domain
 {
     public class Box
     {

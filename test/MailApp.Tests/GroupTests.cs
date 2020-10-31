@@ -1,5 +1,5 @@
 using System;
-using MailApp.Models;
+using MailApp.Domain;
 using Xunit;
 
 namespace MailApp.Tests
