@@ -10,6 +10,7 @@ namespace MailApp.Tests
         public void Ctor_Ok()
         {
             var group = new Group("A");
+            Assert.Equal("A", group.Name);
         }
 
         [Theory]
