@@ -1,0 +1,219 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+    <!-- TOP -->
+    <div class="row mx-lg-n5 align-items-center bg-info rounded-bottom">
+        <div class="col-sm-2">
+            <figure class="figure">
+                <h1> <img src="~/letterImage.png" class="figure-img img-fluid rounded" alt="zdjontko" height="50" width="50"> MailApp</h1>
+            </figure>
+        </div>
+        <div class="col-sm">
+            <p> </p>
+        </div>
+        <div class="col-sm-6">
+            <p></p>
+        </div>
+        <div class="col-sm">
+            <button type="button" class="btn btn-primary btn-sm">
+                Grupy <span class="badge badge-secondary">8 </span>
+            </button>
+        </div>
+        <div class="col-sm">
+            <button type="button" class="btn btn-secondary btn-sm">
+                Ustawienia
+            </button>
+        </div>
+        <div class="col-sm">
+            <button type="button" class="btn btn-danger btn-sm">
+                Wyloguj
+            </button>
+        </div>
+    </div>
+
+    <div class="row mx-lg-n5 align-items-center rounded-bottom marg" style="height: 80px;">
+        <div class="col-sm">
+            <button type="button" class="btn btn-secondary btn-sm">
+                Nowa wiadomość
+            </button>
+        </div>
+        <div class="col-sm-11">
+            <p> </p>
+        </div>
+    </div>
+    <!-- Menu -->
+    <div class="row mx-lg-n5">
+        <div class="col-sm-1 align-self-start">
+            <div class="btn-group-vertical">
+                <button type="button" class="btn btn-secondary btn-sm text-left">
+                    Odebrane <span class="badge badge-primary">11</span>
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm text-left">
+                    Wysłane
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm text-left">
+                    Spam <span class="badge badge-primary">8</span>
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm text-left">
+                    Kopie robocze <span class="badge badge-primary">2</span>
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm text-left">
+                    Kosz
+                </button>
+            </div>
+        </div>
+        <!--Messages List -->
+        <div class="col-sm-3">
+            <div class="overflow-auto">
+                <div class="card">
+                    <div class="card-header">
+                        New Messages:
+                    </div>
+
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Krzysztof Konieczny</h6>
+                                <small>2 days ago</small>
+                            </div>
+                            <p class="mb-1">Temat: Sprint1</p>
+                            <small>Grupa: Praca</small>
+                        </a>
+
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Krzysztof Pieczony</h6>
+                                <small>2 days ago</small>
+                            </div>
+                            <p class="mb-1">Temat: Projoby</p>
+                            <small>Grupa: Uczelnia</small>
+                        </a>
+
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Jan Kowalski</h6>
+                                <small class="text-muted">2 days ago</small>
+                            </div>
+                            <p class="mb-1">Temat: Kopytko</p>
+                            <small class="text-muted">Grupa: Prywatne</small>
+                        </a>
+
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Jan Kowalski</h6>
+                                <small class="text-muted">4 days ago</small>
+                            </div>
+                            <p class="mb-1">Temat: Oceny</p>
+                            <small class="text-muted">Grupa: Uczelnia</small>
+                        </a>
+
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Jan Kowalski</h6>
+                                <small class="text-muted">5 days ago</small>
+                            </div>
+                            <p class="mb-1">Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships</p>
+                            <small class="text-muted">Grupa: Praca</small>
+                        </a>
+
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Jan Nowak</h6>
+                                <small class="text-muted">5 days ago</small>
+                            </div>
+                            <p class="mb-1">Temat: Zebranie.</p>
+                            <small class="text-muted">Grupa: Praca</small>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mail Content -->
+        <div class="col-sm-7">
+            <div class="container-fluid rounded-bottom bg-white" style="border-style:outset;">
+                <div class="row align-items-center" style="background-color: darkgrey;">
+                    <div class="col-sm-6">
+                        <h6> Od: Krzysztof Konieczny </h6>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-2">
+                        <span class="text-bold">Grupa: Praca</span>
+                    </div>
+                </div>
+
+                <div class="row" style="height:2px; background: black;"></div>
+
+                <div class="row align-items-center" style="background-color: darkgrey;">
+                    <div class="col-sm-6">
+                        <p> Temat: Sprint1 </p>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-2">
+                        <small class="text-muted">Data: 20.01.2020</small>
+                    </div>
+                </div>
+
+                <div class="row" style="height:2px; background: black;"></div>
+
+                <div class="overflow-auto">
+                    <p>
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholars
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                        Temat: Zmiana terminu składania wniosków/ new deadline for submitting applications for scholarships
+                    </p>
+                </div>
+                <div class="row" style="height:1px; background: black;"></div>
+                <div class="row" style="height: 5px;"></div>
+                <div class="row">
+                    <div class="col-9"></div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-info btn-sm rounded-pill">
+                            Dodaj do kosza
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-info btn-sm rounded-pill">
+                            Zapisz
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="height: 5px;"></div>
+            </div>
+        </div>
+    </div>

@@ -14,6 +14,16 @@ namespace MailApp.Controllers
             _logger = logger;
         }
 
+        public IActionResult BasicView()
+        {
+            return View();
+        }
+
+        public IActionResult MessageView()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
