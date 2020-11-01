@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp", "src\MailApp\Mail
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{01F6CFB9-13F4-43E6-883C-936D4EF90E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailApp.Tests", "test\MailApp.Tests\MailApp.Tests.csproj", "{444D670E-88DC-4E93-A095-E4F408278BEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp.Tests", "test\MailApp.Tests\MailApp.Tests.csproj", "{444D670E-88DC-4E93-A095-E4F408278BEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailApp.Domain", "src\MailApp.Domain\MailApp.Domain.csproj", "{B5D196B6-9654-4B9D-A0B4-CB0273A37A5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp.Domain", "src\MailApp.Domain\MailApp.Domain.csproj", "{B5D196B6-9654-4B9D-A0B4-CB0273A37A5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailApp.Infrastructure", "src\MailApp.Infrastructure\MailApp.Infrastructure.csproj", "{640C105D-CFC6-4401-99BB-F9281FCDABEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp.Infrastructure", "src\MailApp.Infrastructure\MailApp.Infrastructure.csproj", "{640C105D-CFC6-4401-99BB-F9281FCDABEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
