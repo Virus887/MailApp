@@ -4,11 +4,10 @@ using System.Linq;
 
 namespace MailApp.Domain
 {
-    public class Group
+    public class Group : Entity<int>
     {
         public string Name { get; set; }
 
-        public int Id { get; }
 
         //Tu w sumie mozemy zrobic Dictionary i nadawac szutcznie id 
         public List<Account> Accounts { get; set; }
@@ -28,7 +27,12 @@ namespace MailApp.Domain
 
         public void AddAccount(Account account)
         {
-            if (Accounts.Any(x => x.Id == account.Id))
+            if (account == null)
+            {
+                throw new ArgumentNullException(nameof(account));
+            }
+
+            if (!Accounts.Any(x => x == account))
             {
                 Accounts.Add(account);
             }
@@ -36,7 +40,12 @@ namespace MailApp.Domain
 
         public void RemoveAccount(Account account)
         {
-            if (Accounts.Any(x => x.Id == account.Id))
+            if (account == null)
+            {
+                throw new ArgumentNullException(nameof(account));
+            }
+
+            if (Accounts.Any(x => x == account))
             {
                 Accounts.Remove(account);
             }
@@ -45,6 +54,11 @@ namespace MailApp.Domain
         //Przeszukiwanie
         public Account FindMemberByNick(string nick)
         {
+            if (String.IsNullOrEmpty(nick))
+            {
+                throw new ArgumentNullException(nameof(nick));
+            }
+
             foreach (Account a in Accounts)
             {
                 if (a.Nick == nick) return a;

@@ -5,7 +5,7 @@ namespace MailApp.Domain
 {
     public class Box
     {
-        public List<Message> Messages { get; set; }
+        public List<Message> Messages { get; }
 
         //Methods
         public Box()
@@ -14,46 +14,17 @@ namespace MailApp.Domain
         }
         public Message CreateMessage() => new Message();
 
-        public void SendMessage(Message message)
-        {
-            if (message.Group != null)
-            {
-                foreach (var r in message.Group.Accounts)
-                {
-
-                    if (message.Subject == null)
-                    {
-                        //komunikat czy na pewno chcesz wyslac pusta wiadomosc
-                    }
-                    if (message.Notification)
-                    {
-                        //wysylanie notyfikacji
-                    }
-                }
-            }
-
-
-            if (message.Receiver == null)
-            {
-                //brak odbiorcy
-            }
-            if (message.Subject == null)
-            {
-                //komunikat czy na pewno chcesz wyslac pusta wiadomosc
-            }
-            if (message.Notification)
-            {
-                //wysylanie notyfikacji
-            }
-            message.Date = DateTime.Now;
-        }
 
         public void ReadMessage(Message message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             message.IsRead = true;
             //openMessage
         }
-
 
     }
 }

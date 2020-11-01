@@ -2,22 +2,18 @@
 
 namespace MailApp.Domain
 {
-    public class Message
+    public class Message:Entity<int>
     {
-        public int Id { get; }
-        public Account Sender { get; set; }
-        public Account Receiver { get; set; }
-        public Group Group { get; set; }
+        public Account Sender { get; }
+        public Account Receiver { get; private set; }
+        public Group Group { get; private set; }
         public string Subject { get; set; }
         //nw czy ten format
         public string Text { get; set; }
         public DateTime Date { get; set; }
         //ustawiana na False, jedyny moment gdy sie tym przejmujemy to Odebrane w Box
         public bool IsRead { get; set; }
-        public bool Notification { get; set; }
-
-
-
+        public bool Notification { get; private set; }
 
 
         //METHODS
@@ -30,10 +26,65 @@ namespace MailApp.Domain
             Notification = false;
         }
 
-       
+
         public void MarkAsUnRead() => IsRead = false;
         public void AddNotification() => Notification = true;
         public void DeleteNotification() => Notification = false;
+        public void AddReceiver(Account receiver)
+        {
+            if (receiver == null)
+            {
+                throw new ArgumentNullException(nameof(receiver));
+            }
+            this.Receiver = receiver;
+        }
+
+        public void AddGroup(Group group)
+        {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+
+            // trzeba jeszcze sprawdzic czy taka grupa istnieje
+            this.Group = group;
+        }
+        public void SendMessage()
+        {
+
+            if (this.Group != null)
+            {
+                foreach (var r in this.Group.Accounts)
+                {
+
+                    if (this.Subject == null)
+                    {
+                        //komunikat czy na pewno chcesz wyslac pusta wiadomosc
+                    }
+                    if (this.Notification)
+                    {
+                        //wysylanie notyfikacji
+                    }
+                }
+            }
+
+
+            if (this.Receiver == null)
+            {
+                //brak odbiorcy
+            }
+            if (String.IsNullOrEmpty(this.Subject))
+            {
+                //komunikat czy na pewno chcesz wyslac pusta wiadomosc
+            }
+            if (this.Notification)
+            {
+                //wysylanie notyfikacji
+            }
+            this.Date = DateTime.Now;
+        }
+
+
 
 
     }
