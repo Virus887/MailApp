@@ -5,15 +5,9 @@ namespace MailApp.Domain
 {
     public class Box
     {
-        public List<Message> Messages { get; }
+        public List<Message> Messages { get; private set; } = new List<Message>();
 
-        //Methods
-        public Box()
-        {
-            Messages = new List<Message>();
-        }
         public Message CreateMessage() => new Message();
-
 
         public void ReadMessage(Message message)
         {
@@ -22,9 +16,7 @@ namespace MailApp.Domain
                 throw new ArgumentNullException(nameof(message));
             }
 
-            message.IsRead = true;
-            //openMessage
+            message.MarkAsRead();
         }
-
     }
 }

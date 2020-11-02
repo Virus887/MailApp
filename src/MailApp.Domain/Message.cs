@@ -2,21 +2,25 @@
 
 namespace MailApp.Domain
 {
-    public class Message:Entity<int>
+    public class Message: Entity<int>
     {
         public Account Sender { get; }
         public Account Receiver { get; private set; }
         public Group Group { get; private set; }
         public string Subject { get; set; }
+
         //nw czy ten format
         public string Text { get; set; }
-        public DateTime Date { get; set; }
-        //ustawiana na False, jedyny moment gdy sie tym przejmujemy to Odebrane w Box
-        public bool IsRead { get; set; }
+
+        public DateTime SentDate { get; set; }
+
+        /// <summary>
+        /// Ustawiana na False, jedyny moment gdy sie tym przejmujemy to Odebrane w Box
+        /// </summary>
+        public bool IsRead { get; private set; }
+
         public bool Notification { get; private set; }
 
-
-        //METHODS
         public Message()
         {
             //Id automatycznie ustawiany 
@@ -27,9 +31,11 @@ namespace MailApp.Domain
         }
 
 
+        public void MarkAsRead() => IsRead = true;
         public void MarkAsUnRead() => IsRead = false;
         public void AddNotification() => Notification = true;
         public void DeleteNotification() => Notification = false;
+        
         public void AddReceiver(Account receiver)
         {
             if (receiver == null)
@@ -49,9 +55,9 @@ namespace MailApp.Domain
             // trzeba jeszcze sprawdzic czy taka grupa istnieje
             this.Group = group;
         }
+        
         public void SendMessage()
         {
-
             if (this.Group != null)
             {
                 foreach (var r in this.Group.Accounts)
@@ -81,11 +87,7 @@ namespace MailApp.Domain
             {
                 //wysylanie notyfikacji
             }
-            this.Date = DateTime.Now;
+            this.SentDate = DateTime.Now;
         }
-
-
-
-
     }
 }

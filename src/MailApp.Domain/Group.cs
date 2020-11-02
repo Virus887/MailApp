@@ -7,13 +7,12 @@ namespace MailApp.Domain
     public class Group : Entity<int>
     {
         public string Name { get; set; }
-
-
-        //Tu w sumie mozemy zrobic Dictionary i nadawac szutcznie id 
         public List<Account> Accounts { get; set; }
 
+        private Group()
+        {
+        }
 
-        //Methods
         public Group(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -51,7 +50,6 @@ namespace MailApp.Domain
             }
         }
 
-        //Przeszukiwanie
         public Account FindMemberByNick(string nick)
         {
             if (String.IsNullOrEmpty(nick))
@@ -59,13 +57,7 @@ namespace MailApp.Domain
                 throw new ArgumentNullException(nameof(nick));
             }
 
-            foreach (Account a in Accounts)
-            {
-                if (a.Nick == nick) return a;
-            }
-
-            //tu nie pamietam co sie zwracalo
-            return null;
+            return Accounts.FirstOrDefault(a => a.Nick == nick);
         }
     }
 }
