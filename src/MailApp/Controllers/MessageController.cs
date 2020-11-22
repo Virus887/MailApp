@@ -141,7 +141,7 @@ namespace MailApp.Controllers
 
             MailAppDbContext.Messages.Add(message);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -156,7 +156,22 @@ namespace MailApp.Controllers
 
             MailAppDbContext.Messages.Remove(message);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsUnread(MarkAsUnreadViewModel m, CancellationToken cancellationToken)
+        {
+            var message = await MailAppDbContext.Messages.SingleOrDefaultAsync(x => x.Id == m.MessageId, cancellationToken);
+
+            if (message == null)
+            {
+                return BadRequest();
+            }
+
+            message.MarkAsUnRead();
+            await MailAppDbContext.SaveChangesAsync(cancellationToken);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

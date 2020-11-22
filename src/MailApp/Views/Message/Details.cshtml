@@ -44,9 +44,12 @@
             </form>
         </div>
         <div class="col-2">
-            <button type="button" class="btn btn-info btn-sm rounded-pill">
-                Oznacz jako nieprzeczytane
-            </button>
+            <form asp-action="MarkAsUnread" method="post">
+                <input type="hidden" asp-for="MessageId" />
+                <button type="submit" class="btn btn-info btn-sm rounded-pill">
+                    Oznacz jako nieprzeczytane
+                </button>
+            </form>
         </div>
     </div>
     <div class="row" style="height: 5px;"></div>

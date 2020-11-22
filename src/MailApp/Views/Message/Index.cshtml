@@ -27,7 +27,7 @@
                 New Messages:
             </div>
             <div>
-                <button class="dropdown" style="height: 30px; width:100%; background-color:cornflowerblue">
+                <button class="dropdown" style="height: 30px; width: 100%; background-color: cornflowerblue">
                     <a class="dropdown-toggle" data-toggle="dropdown">
                         Filtruj po kontach<b class="caret"></b>
                     </a>
@@ -35,10 +35,10 @@
                         @foreach (var s in Model.Senders)
                         {
                             <li>
-                                <a asp-controller="Message" asp-action="Index" asp-route-senderId="@s.AccountId" >@s.Nick</a>
+                                <a asp-controller="Message" asp-action="Index" asp-route-senderId="@s.AccountId">@s.Nick</a>
                             </li>
                         }
-                        <li class="divider" />
+                        <li class="divider"/>
                         <li>
                             <a asp-controller="Message" asp-action="Index" asp-route-senderId="">All</a>
                         </li>
@@ -54,6 +54,7 @@
                         asp-route-MessageId="@message.MessageId"
                         class="list-group-item list-group-item-action flex-column align-items-start"
                         data-ajax="message-container"
+                        style="color: @(message.IsRead ? "" : "red")"
                     >
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">@message.Sender.Nick</h6>
@@ -66,7 +67,7 @@
         </div>
     </div>
     <div class="col-sm-7" id="message-container">
-        @if(Model.Details != null)
+        @if (Model.Details != null)
         {
             <partial name="Details" model="Model.Details"/>
         }
@@ -74,7 +75,7 @@
 </div>
 
 <script>
-    $('a[data-ajax]').click(function (ev) {
+    $('a[data-ajax]').click(function(ev) {
         ev.preventDefault();
         var el = $(this);
         var url = this.href;
@@ -82,13 +83,14 @@
         var container = $('#' + containerId);
 
         fetch(url)
-            .then(function (res) {
+            .then(function(res) {
                 return res.text();
             })
-            .then(function (body) {
+            .then(function(body) {
                 container.html(body);
+                el.css('color', '');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 container.text('Error during fetching data');
             });
     });

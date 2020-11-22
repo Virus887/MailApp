@@ -1,6 +1,6 @@
 ﻿namespace MailApp.Models.Messages
 {
-    public class RemoveMessageViewModel
+    public class MarkAsUnreadViewModel
     {
         public int MessageId { get; set; }
     }
