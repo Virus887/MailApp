@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MailApp.Domain
 {
@@ -8,6 +9,7 @@ namespace MailApp.Domain
 
         public string Email { get; private set; }
         public string Nick { get; private set; }
+        internal ICollection<GroupAccount> GroupAccounts { get; private set; } = new List<GroupAccount>();
 
         private Account()
         {

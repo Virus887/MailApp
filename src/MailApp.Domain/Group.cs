@@ -6,8 +6,8 @@ namespace MailApp.Domain
 {
     public class Group : Entity<int>
     {
-        public string Name { get; set; }
-        public List<Account> Accounts { get; set; }
+        public string Name { get; private set; }
+        public ICollection<GroupAccount> GroupAccounts { get; private set; } = new List<GroupAccount>();
 
         private Group()
         {
@@ -21,32 +21,29 @@ namespace MailApp.Domain
             }
 
             Name = name;
-            Accounts = new List<Account>();
         }
 
         public void AddAccount(Account account)
         {
-            if (account == null)
-            {
-                throw new ArgumentNullException(nameof(account));
-            }
+            _ = account ?? throw new ArgumentNullException(nameof(account));
 
-            if (!Accounts.Any(x => x == account))
+            if (GroupAccounts.All(x => x.Account != account))
             {
-                Accounts.Add(account);
+                var groupAccount = new GroupAccount(account, this);
+                GroupAccounts.Add(groupAccount);
+                account.GroupAccounts.Add(groupAccount);
             }
         }
 
         public void RemoveAccount(Account account)
         {
-            if (account == null)
-            {
-                throw new ArgumentNullException(nameof(account));
-            }
+            _ = account ?? throw new ArgumentNullException(nameof(account));
 
-            if (Accounts.Any(x => x == account))
+            var groupAccount = GroupAccounts.SingleOrDefault(x => x.Account == account);
+            if (groupAccount != null)
             {
-                Accounts.Remove(account);
+                GroupAccounts.Remove(groupAccount);
+                account.GroupAccounts.Remove(groupAccount);
             }
         }
 
@@ -57,7 +54,7 @@ namespace MailApp.Domain
                 throw new ArgumentNullException(nameof(nick));
             }
 
-            return Accounts.FirstOrDefault(a => a.Nick == nick);
+            return GroupAccounts.FirstOrDefault(a => a.Account.Nick == nick)?.Account;
         }
     }
 }

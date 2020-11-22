@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MailApp.Infrastructure.Mappings
 {
-    public class MessageMap : IEntityTypeConfiguration<Message>
+    internal class MessageMap : IEntityTypeConfiguration<Message>
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {

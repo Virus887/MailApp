@@ -1,6 +1,5 @@
 using System;
 using MailApp.Domain;
-using System.Linq;
 using Xunit;
 
 namespace MailApp.Tests
@@ -15,10 +14,10 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        public void Ctor_List_Not_NULL()
+        public void Ctor_List_Not_Null()
         {
             var group = new Group("A");
-            Assert.NotNull(group.Accounts);
+            Assert.NotNull(group.GroupAccounts);
         }
 
         [Theory]
@@ -37,32 +36,33 @@ namespace MailApp.Tests
             Assert.Throws<ArgumentNullException>(() => new Group(name));
         }
 
-        [Theory]
-        [InlineData(null)]
-        public void AddAccount_Throw_ArgumentNullException(Account account)
+        [Fact]
+        public void AddAccount_Throw_ArgumentNullException()
         {
             var gr = new Group("A");
-            Assert.Throws<ArgumentNullException>(() => gr.AddAccount(account));
+            Assert.Throws<ArgumentNullException>(() => gr.AddAccount(default));
         }
 
         [Fact]
         public void AddAccount_Count2_Ok()
         {
+            var gr = new Group("A");
+
             var a1 = new Account("nick1", "a@a.pl");
             var a2 = new Account("nick2", "b@b.pl");
-            var gr = new Group("A");
+
             gr.AddAccount(a1);
             gr.AddAccount(a1);
             gr.AddAccount(a2);
-            Assert.Equal(2, gr.Accounts.Count());
+
+            Assert.Equal(2, gr.GroupAccounts.Count);
         }
 
-        [Theory]
-        [InlineData(null)]
-        public void removeAccount_Throw_ArgumentNullException(Account account)
+        [Fact]
+        public void RemoveAccount_Throw_ArgumentNullException()
         {
             var gr = new Group("A");
-            Assert.Throws<ArgumentNullException>(() => gr.RemoveAccount(account));
+            Assert.Throws<ArgumentNullException>(() => gr.RemoveAccount(default));
         }
 
         [Fact]
@@ -72,12 +72,13 @@ namespace MailApp.Tests
             var a1 = new Account("nick1", "a@a.pl");
             var a2 = new Account("nick2", "b@b.pl");
             var a3 = new Account("nick3", "c@c.pl");
-            //dodaje 3 i usuwam 1
+
             gr.AddAccount(a1);
             gr.AddAccount(a2);
             gr.AddAccount(a3);
-            gr.RemoveAccount(a2);
-            Assert.Equal(2, gr.Accounts.Count());
+            gr.RemoveAccount(a3);
+
+            Assert.Equal(2, gr.GroupAccounts.Count);
         }
 
         [Theory]

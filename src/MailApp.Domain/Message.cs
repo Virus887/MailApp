@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace MailApp.Domain
 {
@@ -42,7 +43,7 @@ namespace MailApp.Domain
             {
                 throw new ArgumentNullException(nameof(receiver));
             }
-            this.Receiver = receiver;
+            Receiver = receiver;
         }
 
         public void AddGroup(Group group)
@@ -53,21 +54,21 @@ namespace MailApp.Domain
             }
 
             // trzeba jeszcze sprawdzic czy taka grupa istnieje
-            this.Group = group;
+            Group = group;
         }
         
         public void SendMessage()
         {
-            if (this.Group != null)
+            if (Group != null)
             {
-                foreach (var r in this.Group.Accounts)
+                foreach (var r in Group.GroupAccounts.Select(x => x.Account))
                 {
 
-                    if (this.Subject == null)
+                    if (Subject == null)
                     {
                         //komunikat czy na pewno chcesz wyslac pusta wiadomosc
                     }
-                    if (this.Notification)
+                    if (Notification)
                     {
                         //wysylanie notyfikacji
                     }
@@ -75,19 +76,19 @@ namespace MailApp.Domain
             }
 
 
-            if (this.Receiver == null)
+            if (Receiver == null)
             {
                 //brak odbiorcy
             }
-            if (String.IsNullOrEmpty(this.Subject))
+            if (String.IsNullOrEmpty(Subject))
             {
                 //komunikat czy na pewno chcesz wyslac pusta wiadomosc
             }
-            if (this.Notification)
+            if (Notification)
             {
                 //wysylanie notyfikacji
             }
-            this.SentDate = DateTime.Now;
+            SentDate = DateTime.Now;
         }
     }
 }
