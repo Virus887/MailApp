@@ -1,5 +1,4 @@
 ﻿using MailApp.Domain;
-using MailApp.Infrastructure.Mappings;
 using Microsoft.EntityFrameworkCore;
 
 namespace MailApp.Infrastructure

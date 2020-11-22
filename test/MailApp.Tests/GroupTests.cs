@@ -6,17 +6,19 @@ namespace MailApp.Tests
 {
     public class GroupTests
     {
+        private readonly Account owner = new Account("owner", "owner@owner.pl");
+
         [Fact]
         public void Ctor_Ok()
         {
-            var group = new Group("A");
+            var group = new Group("A", owner);
             Assert.Equal("A", group.Name);
         }
 
         [Fact]
         public void Ctor_List_Not_Null()
         {
-            var group = new Group("A");
+            var group = new Group("A", owner);
             Assert.NotNull(group.GroupAccounts);
         }
 
@@ -24,7 +26,7 @@ namespace MailApp.Tests
         [InlineData("Name")]
         public void Ctor_Name_Equals_Given_String(string name)
         {
-            var group = new Group(name);
+            var group = new Group(name, owner);
             Assert.Equal(name, group.Name);
         }
 
@@ -33,20 +35,20 @@ namespace MailApp.Tests
         [InlineData("")]
         public void Ctor_EmptyName_Throw_ArgumentException(String name)
         {
-            Assert.Throws<ArgumentNullException>(() => new Group(name));
+            Assert.Throws<ArgumentNullException>(() => new Group(name, owner));
         }
 
         [Fact]
         public void AddAccount_Throw_ArgumentNullException()
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
             Assert.Throws<ArgumentNullException>(() => gr.AddAccount(default));
         }
 
         [Fact]
         public void AddAccount_Count2_Ok()
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
 
             var a1 = new Account("nick1", "a@a.pl");
             var a2 = new Account("nick2", "b@b.pl");
@@ -55,20 +57,20 @@ namespace MailApp.Tests
             gr.AddAccount(a1);
             gr.AddAccount(a2);
 
-            Assert.Equal(2, gr.GroupAccounts.Count);
+            Assert.Equal(3, gr.GroupAccounts.Count);
         }
 
         [Fact]
         public void RemoveAccount_Throw_ArgumentNullException()
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
             Assert.Throws<ArgumentNullException>(() => gr.RemoveAccount(default));
         }
 
         [Fact]
         public void RemoveAccount_Count2_Ok()
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
             var a1 = new Account("nick1", "a@a.pl");
             var a2 = new Account("nick2", "b@b.pl");
             var a3 = new Account("nick3", "c@c.pl");
@@ -78,7 +80,7 @@ namespace MailApp.Tests
             gr.AddAccount(a3);
             gr.RemoveAccount(a3);
 
-            Assert.Equal(2, gr.GroupAccounts.Count);
+            Assert.Equal(3, gr.GroupAccounts.Count);
         }
 
         [Theory]
@@ -86,14 +88,14 @@ namespace MailApp.Tests
         [InlineData("")]
         public void FindMemberByNick_EmptyNickThrow_ArgumentException(String nick)
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
             Assert.Throws<ArgumentNullException>(() => gr.FindMemberByNick(nick));
         }
 
         [Fact]
         public void FindMemberByNick_Exists_NotNull()
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
             var a1 = new Account("nick1", "a@a.pl");
             var a2 = new Account("nick2", "b@b.pl");
             var a3 = new Account("nick3", "c@c.pl");
@@ -106,7 +108,7 @@ namespace MailApp.Tests
         [Fact]
         public void FindMemberByNick_NotExists_Null()
         {
-            var gr = new Group("A");
+            var gr = new Group("A", owner);
             var a1 = new Account("nick1", "a@a.pl");
             var a2 = new Account("nick2", "b@b.pl");
             var a3 = new Account("nick3", "c@c.pl");

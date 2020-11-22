@@ -51,7 +51,7 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        public void AddReceiver_Receiver_Not_NULL()
+        public void AddReceiver_Receiver_Not_Null()
         {
             var m = new Message();
             var a = new Account("nick1", "a@a.pl");
@@ -71,7 +71,7 @@ namespace MailApp.Tests
         public void AddGroup_Group_Not_NULL()
         {
             var m = new Message();
-            var gr = new Group("group1");
+            var gr = new Group("group1", new Account("owner", "owner@owner.pl"));
             m.AddGroup(gr);
             Assert.NotNull(m.Group);
         }

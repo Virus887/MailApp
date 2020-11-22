@@ -1,0 +1,10 @@
+﻿@model MailApp.Models.Groups.AddGroupViewModel
+
+<form asp-action="AddGroup">
+
+    <label asp-for="Name" />
+    <div class="input-group mb-3">
+        <input asp-for="Name" class="form-control" placeholder="Group name">
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

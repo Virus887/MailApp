@@ -1,5 +1,4 @@
 using System;
-using MailApp.Controllers;
 using MailApp.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
@@ -28,6 +27,7 @@ namespace MailApp
             services.AddControllersWithViews(x =>
             {
                 x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add<EnsureEntitiesAreAttached>();
                 x.Filters.Add<EnsureAccountActionFilter>();
             });
             services.AddRazorPages();

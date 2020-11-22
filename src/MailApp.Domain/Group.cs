@@ -13,7 +13,7 @@ namespace MailApp.Domain
         {
         }
 
-        public Group(string name)
+        public Group(string name, Account owner)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -21,25 +21,28 @@ namespace MailApp.Domain
             }
 
             Name = name;
+            AddAccount(owner, GroupAccountType.Owner);
         }
 
-        public void AddAccount(Account account)
+        private void AddAccount(Account account, GroupAccountType type)
         {
             _ = account ?? throw new ArgumentNullException(nameof(account));
 
             if (GroupAccounts.All(x => x.Account != account))
             {
-                var groupAccount = new GroupAccount(account, this);
+                var groupAccount = new GroupAccount(account, this, type);
                 GroupAccounts.Add(groupAccount);
                 account.GroupAccounts.Add(groupAccount);
             }
         }
 
+        public void AddAccount(Account account) => AddAccount(account, GroupAccountType.Member);
+
         public void RemoveAccount(Account account)
         {
             _ = account ?? throw new ArgumentNullException(nameof(account));
 
-            var groupAccount = GroupAccounts.SingleOrDefault(x => x.Account == account);
+            var groupAccount = GroupAccounts.SingleOrDefault(x => x.Account == account && x.Type == GroupAccountType.Member);
             if (groupAccount != null)
             {
                 GroupAccounts.Remove(groupAccount);
@@ -55,6 +58,18 @@ namespace MailApp.Domain
             }
 
             return GroupAccounts.FirstOrDefault(a => a.Account.Nick == nick)?.Account;
+        }
+
+        public bool IsMember(Account account)
+        {
+            _ = account ?? throw new ArgumentNullException(nameof(account));
+            return GroupAccounts.Any(x => x.Account == account);
+        }
+
+        public bool IsOwner(Account account)
+        {
+            _ = account ?? throw new ArgumentNullException(nameof(account));
+            return GroupAccounts.Any(x => x.Account == account && x.Type == GroupAccountType.Owner);
         }
     }
 }
