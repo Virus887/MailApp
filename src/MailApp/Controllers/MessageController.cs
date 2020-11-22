@@ -28,6 +28,7 @@ namespace MailApp.Controllers
             var senders = await MailAppDbContext.Accounts
                 .ToArrayAsync(cancellationToken);
 
+            //TODO: filtrowanie wiadomości po aktualnym użytkowniku
             var messages = await MailAppDbContext.Messages
                 .Include(x => x.Sender)
                 .Include(x => x.Receiver)
@@ -70,11 +71,41 @@ namespace MailApp.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        public IActionResult NewMessage()
+        [HttpGet("/Message/Details/{messageId}")]
+        public async Task<IActionResult> Details(int messageId, CancellationToken cancellationToken)
         {
-            return View();
+            var message = await MailAppDbContext.Messages
+                .Include(x => x.Receiver)
+                .Include(x => x.Sender)
+                .SingleOrDefaultAsync(x => x.Id == messageId, cancellationToken);
+
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            message.MarkAsRead();
+            await MailAppDbContext.SaveChangesAsync(cancellationToken);
+
+            var viewModel = new MessageViewModel
+            {
+                MessageId = message.Id,
+                Sender = new AccountViewModel
+                {
+                    AccountId = message.Sender.Id,
+                    Nick = message.Sender.Nick,
+                    Email = message.Sender.Email,
+                },
+                Subject = message.Subject,
+                Text = message.Text,
+                SentDate = message.SentDate
+            };
+
+            return PartialView(viewModel);
         }
+
+        [HttpGet]
+        public IActionResult NewMessage() => View();
 
         [HttpPost]
         public async Task<IActionResult> NewMessage(NewMessageViewModel m, CancellationToken cancellationToken)

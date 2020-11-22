@@ -45,13 +45,51 @@
                     </ul>
                 </button>
             </div>
-            <partial name="MessageList" model="Model.MessageList"/>
+            <div class="list-group">
+                @foreach (var message in Model.MessageList.Messages)
+                {
+                    <a
+                        asp-controller="Message"
+                        asp-action="Details"
+                        asp-route-MessageId="@message.MessageId"
+                        class="list-group-item list-group-item-action flex-column align-items-start"
+                        data-ajax="message-container"
+                    >
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">@message.Sender.Nick</h6>
+                            <small>@message.SentDate.Date</small>
+                        </div>
+                        <p class="mb-1">@message.Subject</p>
+                    </a>
+                }
+            </div>
         </div>
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-7" id="message-container">
         @if(Model.Details != null)
         {
             <partial name="Details" model="Model.Details"/>
         }
     </div>
 </div>
+
+<script>
+    $('a[data-ajax]').click(function (ev) {
+        ev.preventDefault();
+        var el = $(this);
+        var url = this.href;
+        var containerId = el.data('ajax');
+        var container = $('#' + containerId);
+
+        fetch(url)
+            .then(function (res) {
+                return res.text();
+            })
+            .then(function (body) {
+                container.html(body);
+            })
+            .catch(function (err) {
+                container.text('Error during fetching data');
+            });
+    });
+</script>
