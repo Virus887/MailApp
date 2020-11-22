@@ -16,6 +16,9 @@ namespace MailApp.Infrastructure.Mappings
             builder.HasIndex(x => x.Name).IsUnique();
 
             builder.HasMany(x => x.GroupAccounts);
+
+            builder.Ignore(x => x.Owner);
+            builder.Ignore(x => x.Members);
         }
     }
 }

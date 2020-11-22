@@ -1,4 +1,48 @@
-﻿@using Newtonsoft.Json
-@model MailApp.Models.Groups.GroupDetailsViewModel
+﻿@model MailApp.Models.Groups.GroupDetailsViewModel
 
-@JsonConvert.SerializeObject(Model)
+<a asp-action="RemoveGroup" asp-route-groupId="@Model.GroupId" class="btn btn-danger">Remove group</a>
+<a asp-action="AddMember" asp-route-groupId="@Model.GroupId" class="btn btn-outline-success">Add new member</a>
+<a asp-action="RemoveMember" asp-route-groupId="@Model.GroupId" class="btn btn-outline-danger">Remove member</a>
+
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <b>Group name</b>
+        </td>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <td>
+            <b>Owner</b>
+        </td>
+        <td>@Model.Owner.Nick</td>
+    </tr>
+    </tbody>
+</table>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Nick
+        </th>
+        <th>
+            Email
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var member in Model.Members)
+    {
+        <tr>
+            <td>
+                @member.Nick
+            </td>
+            <td>
+                @member.Email
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

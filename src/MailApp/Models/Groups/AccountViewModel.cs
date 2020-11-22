@@ -1,9 +1,22 @@
-﻿namespace MailApp.Models.Groups
+﻿using MailApp.Domain;
+
+namespace MailApp.Models.Groups
 {
     public class AccountViewModel
     {
         public int AccountId { get; set; }
         public string Nick { get; set; }
         public string Email { get; set; }
+
+        public AccountViewModel()
+        {
+        }
+
+        public AccountViewModel(Account account)
+        {
+            AccountId = account.Id;
+            Nick = account.Nick;
+            Email = account.Email;
+        }
     }
 }

@@ -77,13 +77,9 @@ namespace MailApp.Controllers
             {
                 GroupId = group.Id,
                 Name = group.Name,
+                Owner = new AccountViewModel(group.Owner),
                 Members = group.GroupAccounts
-                    .Select(x => new AccountViewModel
-                    {
-                        AccountId = x.Account.Id,
-                        Nick = x.Account.Nick,
-                        Email = x.Account.Email,
-                    })
+                    .Select(x => new AccountViewModel(x.Account))
                     .ToArray(),
             };
             return View(viewModel);
@@ -101,6 +97,13 @@ namespace MailApp.Controllers
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Details), new {groupId = group.Id});
         }
+
+        [HttpGet("[action]")]
+        public IActionResult RemoveGroup(int groupId) =>
+            View(new RemoveGroupViewModel
+            {
+                GroupId = groupId,
+            });
 
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveGroup(RemoveGroupViewModel viewModel, CancellationToken cancellationToken)
@@ -122,6 +125,13 @@ namespace MailApp.Controllers
             return RedirectToAction(nameof(List));
         }
 
+        [HttpGet("[action]")]
+        public IActionResult AddMember(int groupId) =>
+            View(new AddMemberViewModel
+            {
+                GroupId = groupId,
+            });
+
         [HttpPost("[action]")]
         public async Task<IActionResult> AddMember(AddMemberViewModel viewModel, CancellationToken cancellationToken)
         {
@@ -137,7 +147,7 @@ namespace MailApp.Controllers
                 return Forbid();
             }
 
-            var newMember = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Id == viewModel.AccountId, cancellationToken);
+            var newMember = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Nick == viewModel.AccountNick, cancellationToken);
             if (newMember == null)
             {
                 return BadRequest();
@@ -147,6 +157,13 @@ namespace MailApp.Controllers
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Details), new {groupId = viewModel.GroupId});
         }
+
+        [HttpGet("[action]")]
+        public IActionResult RemoveMember(int groupId) =>
+            View(new RemoveMemberViewModel
+            {
+                GroupId = groupId,
+            });
 
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveMember(RemoveMemberViewModel viewModel, CancellationToken cancellationToken)
@@ -163,7 +180,7 @@ namespace MailApp.Controllers
                 return Forbid();
             }
 
-            var member = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Id == viewModel.AccountId, cancellationToken);
+            var member = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Nick == viewModel.AccountNick, cancellationToken);
             if (member == null)
             {
                 return BadRequest();

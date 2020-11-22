@@ -4,6 +4,7 @@
     {
         public int GroupId { get; set; }
         public string Name { get; set; }
+        public AccountViewModel Owner { get; set; }
         public AccountViewModel[] Members { get; set; }
     }
 }
