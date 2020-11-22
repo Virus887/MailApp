@@ -54,7 +54,7 @@ namespace MailApp.Tests
         public void AddReceiver_Receiver_Not_NULL()
         {
             var m = new Message();
-            var a = new Account("nick1");
+            var a = new Account("nick1", "a@a.pl");
             m.AddReceiver(a);
             Assert.NotNull(m.Receiver);
         }

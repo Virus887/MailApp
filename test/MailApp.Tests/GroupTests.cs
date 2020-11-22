@@ -7,7 +7,6 @@ namespace MailApp.Tests
 {
     public class GroupTests
     {
-
         [Fact]
         public void Ctor_Ok()
         {
@@ -28,7 +27,6 @@ namespace MailApp.Tests
         {
             var group = new Group(name);
             Assert.Equal(name, group.Name);
-
         }
 
         [Theory]
@@ -48,10 +46,10 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        public void AddAcount_Count2_Ok()
+        public void AddAccount_Count2_Ok()
         {
-            var a1 = new Account("nick1");
-            var a2 = new Account("nick2");
+            var a1 = new Account("nick1", "a@a.pl");
+            var a2 = new Account("nick2", "b@b.pl");
             var gr = new Group("A");
             gr.AddAccount(a1);
             gr.AddAccount(a1);
@@ -68,12 +66,12 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        public void RemoveAcount_Count2_Ok()
+        public void RemoveAccount_Count2_Ok()
         {
             var gr = new Group("A");
-            var a1 = new Account("nick1");
-            var a2 = new Account("nick2");
-            var a3 = new Account("nick3");
+            var a1 = new Account("nick1", "a@a.pl");
+            var a2 = new Account("nick2", "b@b.pl");
+            var a3 = new Account("nick3", "c@c.pl");
             //dodaje 3 i usuwam 1
             gr.AddAccount(a1);
             gr.AddAccount(a2);
@@ -95,26 +93,26 @@ namespace MailApp.Tests
         public void FindMemberByNick_Exists_NotNull()
         {
             var gr = new Group("A");
-            var a1 = new Account("nick1");
-            var a2 = new Account("nick2");
-            var a3 = new Account("nick3");
+            var a1 = new Account("nick1", "a@a.pl");
+            var a2 = new Account("nick2", "b@b.pl");
+            var a3 = new Account("nick3", "c@c.pl");
             gr.AddAccount(a1);
             gr.AddAccount(a2);
             gr.AddAccount(a3);
             Assert.NotNull(gr.FindMemberByNick("nick1"));
         }
+
         [Fact]
         public void FindMemberByNick_NotExists_Null()
         {
             var gr = new Group("A");
-            var a1 = new Account("nick1");
-            var a2 = new Account("nick2");
-            var a3 = new Account("nick3");
+            var a1 = new Account("nick1", "a@a.pl");
+            var a2 = new Account("nick2", "b@b.pl");
+            var a3 = new Account("nick3", "c@c.pl");
             gr.AddAccount(a1);
             gr.AddAccount(a2);
             gr.AddAccount(a3);
             Assert.Null(gr.FindMemberByNick("nick4"));
         }
     }
-
 }

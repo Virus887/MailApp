@@ -4,16 +4,22 @@ namespace MailApp.Domain
 {
     public class Account : Entity<int>
     {
-        public string Nick { get; set; }
         public const int MaxNickLength = 100;
 
-        public Account(string nick)
+        public string Email { get; private set; }
+        public string Nick { get; private set; }
+
+        private Account()
         {
-            ValidateNick(nick);
-            this.Nick = nick;
         }
 
-        private void ValidateNick(string nick)
+        public Account(string nick, string email)
+        {
+            Nick = ValidateNick(nick);
+            Email = ValidateEmail(email);
+        }
+
+        private string ValidateNick(string nick)
         {
             if (String.IsNullOrEmpty(nick))
             {
@@ -24,6 +30,18 @@ namespace MailApp.Domain
             {
                 throw new ArgumentException("Nick is too long");
             }
+
+            return nick;
+        }
+
+        private string ValidateEmail(string email)
+        {
+            if (String.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
+            return email;
         }
     }
 }

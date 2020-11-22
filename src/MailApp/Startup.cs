@@ -1,9 +1,11 @@
 using System;
+using MailApp.Controllers;
 using MailApp.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,18 +23,20 @@ namespace MailApp
         public IConfiguration Configuration { get; }
         public String MailAppConnectionString => Configuration.GetConnectionString("MailApp");
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-            services.AddDbContext<MailAppDbContext>(x => x.UseSqlServer(MailAppConnectionString));
+            services.AddControllersWithViews(x =>
+            {
+                x.Filters.Add(new AuthorizeFilter());
+                x.Filters.Add<EnsureAccountActionFilter>();
+            });
             services.AddRazorPages();
             services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
                 .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
+
             services.AddDbContext<MailAppDbContext>(x => x.UseSqlServer(MailAppConnectionString));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

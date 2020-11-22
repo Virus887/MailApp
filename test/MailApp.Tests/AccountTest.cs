@@ -7,24 +7,36 @@ namespace MailApp.Tests
 {
     public class AccountTests
     {
+        private const string Nick = "nick1";
+        private const string Email = "email@email.pl";
+
         [Fact]
         public void Ctor_Ok()
         {
-            var account = new Account("nick1");
+            var account = new Account(Nick, Email);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Ctor_EmptyName_Throw_ArgumentException(String name)
+        public void Ctor_EmptyNick_Throw_ArgumentException(String nick)
         {
-            Assert.Throws<ArgumentNullException>(() => new Account(name));
+            Assert.Throws<ArgumentNullException>(() => new Account(nick, Email));
         }
-        [Fact]
-        public void Ctor_EmptyName_Throw_Too_Long_Exception()
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Ctor_EmptyEmail_Throw_ArgumentException(String email)
         {
-            var s = string.Join("", Enumerable.Repeat("a", Account.MaxNickLength + 1));
-            Assert.Throws<ArgumentException>(() => new Account(s));
+            Assert.Throws<ArgumentNullException>(() => new Account(Nick, email));
+        }
+
+        [Fact]
+        public void Ctor_EmptyNick_Throw_Too_Long_Exception()
+        {
+            var s = String.Join("", Enumerable.Repeat("a", Account.MaxNickLength + 1));
+            Assert.Throws<ArgumentException>(() => new Account(s, Email));
         }
     }
 }
