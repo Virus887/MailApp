@@ -129,22 +129,30 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> AddMember(AddMemberViewModel viewModel, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(viewModel.GroupId, cancellationToken);
             if (group == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(viewModel.GroupId), "Grupa nie istnieje");
+                return View(viewModel);
             }
 
             if (!group.IsOwner(account))
             {
-                return Forbid();
+                ModelState.AddModelError(String.Empty, "Tylko twórca może zarządzać członkami");
+                return View(viewModel);
             }
 
             var newMember = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Nick == viewModel.AccountNick, cancellationToken);
             if (newMember == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(viewModel.AccountNick), "Nie znaleziono użytkownika o danym nicku");
+                return View(viewModel);
             }
 
             group.AddAccount(newMember);
