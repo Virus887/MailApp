@@ -1,0 +1,57 @@
+﻿@model MailApp.Models.Messages.MessagesViewModel
+
+<div class="row mx-lg-n5">
+    <div class="col-sm-1 align-self-start">
+        <a asp-controller="Message" asp-action="NewMessage" class="btn btn-secondary btn-sm" style="margin-bottom: 10px">Nowa wiadomość</a>
+        <div class="btn-group-vertical">
+            <button type="button" class="btn btn-secondary btn-sm text-left">
+                Odebrane <span class="badge badge-primary">11</span>
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm text-left">
+                Wysłane
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm text-left">
+                Spam <span class="badge badge-primary">8</span>
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm text-left">
+                Kopie robocze <span class="badge badge-primary">2</span>
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm text-left">
+                Kosz
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-header">
+                New Messages:
+            </div>
+            <div>
+                <button class="dropdown" style="height: 30px; width:100%; background-color:cornflowerblue">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        Filtruj po kontach<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        @foreach (var s in Model.Senders)
+                        {
+                            <li>
+                                <a asp-controller="Message" asp-action="Index" asp-route-senderId="@s.AccountId" >@s.Nick</a>
+                            </li>
+                        }
+                        <li class="divider" />
+                        <li>
+                            <a asp-controller="Message" asp-action="Index" asp-route-senderId="">All</a>
+                        </li>
+                    </ul>
+                </button>
+            </div>
+            <partial name="MessageList" model="Model.MessageList"/>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        @if(Model.Details != null)
+        {
+            <partial name="Details" model="Model.Details"/>
+        }
+    </div>
+</div>

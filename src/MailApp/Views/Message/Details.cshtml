@@ -1,0 +1,53 @@
+﻿@model MailApp.Models.Messages.MessageViewModel
+
+<div class="container-fluid rounded-bottom bg-white" style="border-style: outset;">
+    <div class="row align-items-center" style="background-color: darkgrey;">
+        <div class="col-sm-6">
+            <h6> Od: @Model.Sender.Nick </h6>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-2">
+            <span class="text-bold">Grupa: Praca</span>
+        </div>
+    </div>
+
+    <div class="row" style="height: 2px; background: black;"></div>
+
+    <div class="row align-items-center" style="background-color: darkgrey;">
+        <div class="col-sm-6">
+            <p> Temat: @Model.Subject </p>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-2">
+            <small class="text-muted">Data: @Model.SentDate</small>
+        </div>
+    </div>
+
+    <div class="row" style="height: 2px; background: black;"></div>
+
+    <div class="overflow-auto">
+        <p>
+            @Model.Text
+        </p>
+    </div>
+    <div class="row" style="height: 1px; background: black;"></div>
+    <div class="row" style="height: 5px;"></div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-2">
+            
+            <form asp-action="RemoveMessage" method="post">
+                <input type="hidden" asp-for="MessageId"/>
+                <button type="submit" class="btn btn-info btn-sm rounded-pill">
+                    Dodaj do kosza
+                </button>
+            </form>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-info btn-sm rounded-pill">
+                Oznacz jako nieprzeczytane
+            </button>
+        </div>
+    </div>
+    <div class="row" style="height: 5px;"></div>
+</div>

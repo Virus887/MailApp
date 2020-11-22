@@ -1,0 +1,81 @@
+﻿@model MailApp.Models.Messages.NewMessageViewModel
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-sm">Powrót</a>
+
+<!-- BOTTOM -->
+<div class="row mx-lg-n5">
+    <!-- Contacts -->
+    <div class="col-sm-2 align-self-start">
+        <div class="card">
+            <div class="card-header">
+                Kontakty:
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Jan Kowalski</p>
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Jan Kowalik </p>
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Jan Gryt </p>
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Arek Kowal </p>
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Marek Czarek </p>
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Zbyszek Kiełbasa </p>
+            </div>
+            <div class="list-group">
+                <p class="list-group-item"> Jan Stefaniak</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message -->
+
+    <div class="col-9">
+        <form asp-action="NewMessage" asp-controller="Message" method="post" role="form">
+            <div class="container-fluid rounded-bottom bg-white" style="border-style: outset;">
+                <div class="form-group">
+                    <label asp-for="Email">Do:</label>
+                    <input asp-for="Email" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Subject">Temat:</label>
+                    <input class="form-control" asp-for="Subject"/>
+                </div>
+                <div class="form-group">
+                    <!--<label asp-for="Group">Grupy:</label>-->
+                    @*ewentualnie jakas lista rozwijana z moimi grupami*@
+                    <!--<input class="form-control" asp-for="Group"/>-->
+                </div>
+                <div class="form-group">
+                    <label asp-for="Notification">Notyfikacja</label>
+                    <input type="checkbox" asp-for="Notification"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Text">Treść:</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="19" asp-for="Text"></textarea>
+                </div>
+
+                <div class="row" style="height: 1px; background: black;"></div>
+                <div class="row" style="height: 5px;"></div>
+                <div class="row">
+                    <div class="col-10"></div>
+                    <div class="col-1">
+                        <button type="submit" class="btn btn-info btn-sm rounded-pill">
+                            Wyślij
+                        </button>
+                    </div>
+                </div>
+                <div class="row" style="height: 5px;"></div>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using MailApp.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
@@ -30,11 +30,13 @@ namespace MailApp
                 x.Filters.Add<EnsureEntitiesAreAttached>();
                 x.Filters.Add<EnsureAccountActionFilter>();
             });
+            services.AddDbContext<MailAppDbContext>(x => x.UseSqlServer(MailAppConnectionString));
             services.AddRazorPages();
             services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
                 .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
 
-            services.AddDbContext<MailAppDbContext>(x => x.UseSqlServer(MailAppConnectionString));
+            services.AddHttpContextAccessor();
+            services.AddScoped<IAccountProvider>(sp => new CacheAccountProvider(ActivatorUtilities.CreateInstance<AccountProvider>(sp)));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

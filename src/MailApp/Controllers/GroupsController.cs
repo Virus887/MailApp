@@ -11,22 +11,16 @@ using Microsoft.EntityFrameworkCore;
 namespace MailApp.Controllers
 {
     // TODO: ujednoolićić obsługę niepoprawnych danych
-
     [Route("/Groups")]
     public class GroupsController : Controller
     {
         private MailAppDbContext MailAppDbContext { get; }
+        private IAccountProvider AccountProvider { get; }
 
-        public GroupsController(MailAppDbContext mailAppDbContext)
+        public GroupsController(MailAppDbContext mailAppDbContext, IAccountProvider accountProvider)
         {
             MailAppDbContext = mailAppDbContext;
-        }
-
-        //TODO: żeby skorzystać z tej metody w innych kontrolerach można ten mechanizm przepisać z wykorzystaniem Model Binderów.
-        private Task<Account> GetAccountForUser(CancellationToken cancellationToken)
-        {
-            var currentUserEmail = User.FindFirst("emails");
-            return MailAppDbContext.Accounts.SingleAsync(x => x.Email == currentUserEmail.Value, cancellationToken);
+            AccountProvider = accountProvider;
         }
 
         private Task<Group> GetGroup(Int32 groupId, CancellationToken cancellationToken) =>
@@ -38,7 +32,7 @@ namespace MailApp.Controllers
         [HttpGet]
         public async Task<IActionResult> List(CancellationToken cancellationToken)
         {
-            var account = await GetAccountForUser(cancellationToken);
+            var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var groups = await MailAppDbContext.Groups
                 .Include(x => x.GroupAccounts).ThenInclude(x => x.Type)
                 .Include(x => x.GroupAccounts).ThenInclude(x => x.Account)
@@ -61,7 +55,7 @@ namespace MailApp.Controllers
         [HttpGet("{groupId}")]
         public async Task<IActionResult> Details(int groupId, CancellationToken cancellationToken)
         {
-            var account = await GetAccountForUser(cancellationToken);
+            var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(groupId, cancellationToken);
             if (group == null)
             {
@@ -91,7 +85,7 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> AddGroup(AddGroupViewModel viewModel, CancellationToken cancellationToken)
         {
-            var account = await GetAccountForUser(cancellationToken);
+            var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = new Group(viewModel.Name, account);
             MailAppDbContext.Groups.Add(group);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
@@ -108,7 +102,7 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveGroup(RemoveGroupViewModel viewModel, CancellationToken cancellationToken)
         {
-            var account = await GetAccountForUser(cancellationToken);
+            var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(viewModel.GroupId, cancellationToken);
             if (group == null)
             {
@@ -135,7 +129,7 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> AddMember(AddMemberViewModel viewModel, CancellationToken cancellationToken)
         {
-            var account = await GetAccountForUser(cancellationToken);
+            var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(viewModel.GroupId, cancellationToken);
             if (group == null)
             {
@@ -168,7 +162,7 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveMember(RemoveMemberViewModel viewModel, CancellationToken cancellationToken)
         {
-            var account = await GetAccountForUser(cancellationToken);
+            var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(viewModel.GroupId, cancellationToken);
             if (group == null)
             {

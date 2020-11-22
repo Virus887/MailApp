@@ -3,9 +3,10 @@ using System.Linq;
 
 namespace MailApp.Domain
 {
-    public class Message: Entity<int>
+    public class Message : Entity<int>
     {
-        public Account Sender { get; }
+        //chwilowo dodaje set(testuje ti jeszcze bez dodoawania "automatycznego"
+        public Account Sender { get; set; }
         public Account Receiver { get; private set; }
         public Group Group { get; private set; }
         public string Subject { get; set; }
@@ -24,19 +25,15 @@ namespace MailApp.Domain
 
         public Message()
         {
-            //Id automatycznie ustawiany 
-            //Sender na this-mysle zeby wiadomosc tworzylo sie przez skrzynke przypisana do Account
-
             IsRead = false;
             Notification = false;
         }
-
 
         public void MarkAsRead() => IsRead = true;
         public void MarkAsUnRead() => IsRead = false;
         public void AddNotification() => Notification = true;
         public void DeleteNotification() => Notification = false;
-        
+
         public void AddReceiver(Account receiver)
         {
             if (receiver == null)
@@ -56,7 +53,7 @@ namespace MailApp.Domain
             // trzeba jeszcze sprawdzic czy taka grupa istnieje
             Group = group;
         }
-        
+
         public void SendMessage()
         {
             if (Group != null)
