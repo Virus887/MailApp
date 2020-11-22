@@ -2,39 +2,24 @@
 
 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-sm">Powrót</a>
 
-<!-- BOTTOM -->
 <div class="row mx-lg-n5">
-    <!-- Contacts -->
     <div class="col-sm-2 align-self-start">
         <div class="card">
             <div class="card-header">
                 Kontakty:
             </div>
-            <div class="list-group">
-                <p class="list-group-item"> Jan Kowalski</p>
-            </div>
-            <div class="list-group">
-                <p class="list-group-item"> Jan Kowalik </p>
-            </div>
-            <div class="list-group">
-                <p class="list-group-item"> Jan Gryt </p>
-            </div>
-            <div class="list-group">
-                <p class="list-group-item"> Arek Kowal </p>
-            </div>
-            <div class="list-group">
-                <p class="list-group-item"> Marek Czarek </p>
-            </div>
-            <div class="list-group">
-                <p class="list-group-item"> Zbyszek Kiełbasa </p>
-            </div>
-            <div class="list-group">
-                <p class="list-group-item"> Jan Stefaniak</p>
-            </div>
+            @foreach (var receiver in Model.LastReceivers)
+            {
+                <div class="list-group">
+                    <p class="list-group-item">
+                        <a asp-action="NewMessage" asp-route-Email="@receiver.Email">
+                            @receiver.Nick
+                        </a>
+                    </p>
+                </div>
+            }
         </div>
     </div>
-
-    <!-- Message -->
 
     <div class="col-9">
         <form asp-action="NewMessage" asp-controller="Message" method="post" role="form">
@@ -77,5 +62,4 @@
             </div>
         </form>
     </div>
-
 </div>

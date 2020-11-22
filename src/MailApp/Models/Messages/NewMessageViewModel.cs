@@ -6,5 +6,7 @@
         public string Subject { get; set; }
         public bool Notification { get; set; }
         public string Text { get; set; }
+
+        public AccountViewModel[] LastReceivers { get; set; }
     }
 }

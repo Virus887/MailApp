@@ -104,13 +104,29 @@ namespace MailApp.Controllers
             return PartialView(viewModel);
         }
 
-        [HttpGet]
-        public IActionResult NewMessage() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> NewMessage(NewMessageViewModel m, CancellationToken cancellationToken)
+        [HttpGet("/Message/NewMessage")]
+        public async Task<IActionResult> GetNewMessage(NewMessageViewModel viewModel, CancellationToken cancellationToken)
         {
-            if (m.Subject == null)
+            var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            var lastReceivers = await MailAppDbContext.Messages
+                .Where(x => x.Sender == sender)
+                .OrderByDescending(x => x.SentDate)
+                .Select(x => x.Receiver)
+                .Distinct()
+                .Take(5)
+                .ToArrayAsync(cancellationToken);
+
+            viewModel.LastReceivers = lastReceivers
+                .Select(x => new AccountViewModel(x))
+                .ToArray();
+
+            return View("NewMessage", viewModel);
+        }
+
+        [HttpPost("/Message/NewMessage")]
+        public async Task<IActionResult> NewMessage(NewMessageViewModel request, CancellationToken cancellationToken)
+        {
+            if (request.Subject == null)
             {
                 //TODO: INFO ZE PUSTA WIADOMOSC
             }
@@ -118,27 +134,28 @@ namespace MailApp.Controllers
             var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var message = new Message
             {
-                Subject = m.Subject,
-                Text = m.Text,
+                Subject = request.Subject,
+                Text = request.Text,
                 Sender = sender,
                 SentDate = DateTime.Now
             };
-            if (m.Notification)
+            if (request.Notification)
             {
                 message.AddNotification();
             }
 
-            if (m.Email == null)
+            if (request.Email == null)
             {
                 return BadRequest();
             }
 
-            var receiver = await MailAppDbContext.Accounts.SingleOrDefaultAsync(a => a.Email == m.Email, cancellationToken);
+            var receiver = await MailAppDbContext.Accounts.SingleOrDefaultAsync(a => a.Email == request.Email, cancellationToken);
             if (receiver == null)
             {
                 return BadRequest();
             }
 
+            message.AddReceiver(receiver);
             MailAppDbContext.Messages.Add(message);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Index));
