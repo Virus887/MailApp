@@ -16,7 +16,6 @@ namespace MailApp
             MailAppDbContext = mailAppDbContext;
         }
 
-
         public void OnActionExecuted(ActionExecutedContext context)
         {
         }
@@ -25,6 +24,11 @@ namespace MailApp
         {
             MailAppDbContext.Attach(GroupAccountType.Owner);
             MailAppDbContext.Attach(GroupAccountType.Member);
+
+            MailAppDbContext.Attach(MessagePersonType.Sender);
+            MailAppDbContext.Attach(MessagePersonType.Receiver);
+            MailAppDbContext.Attach(MessagePersonType.Cc); 
+            MailAppDbContext.Attach(MessagePersonType.Bcc);
         }
     }
 }

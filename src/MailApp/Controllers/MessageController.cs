@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MailApp.Domain;
 using MailApp.Infrastructure;
-using MailApp.Models;
 using MailApp.Models.Accounts;
 using MailApp.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
@@ -30,11 +29,11 @@ namespace MailApp.Controllers
                 .ToArrayAsync(cancellationToken);
 
             var owner = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
-            var queryable =  MailAppDbContext.Messages
-                .Include(x => x.Sender)
-                .Include(x => x.Receiver)
+            var queryable = MailAppDbContext.Messages
+                .Include(x => x.MessagePersons)
+                .ThenInclude(x => x.Account)
                 .Where(x => query.SenderId == null || x.Sender.Id == query.SenderId)
-                .Where(x => x.Receiver == owner);
+                .Where(x => x.MessagePersons.Any(y => y.Type != MessagePersonType.Sender && y.Account == owner));
 
             if (!String.IsNullOrEmpty(query.Search))
             {
@@ -75,8 +74,10 @@ namespace MailApp.Controllers
         public async Task<IActionResult> Details(int messageId, CancellationToken cancellationToken)
         {
             var message = await MailAppDbContext.Messages
-                .Include(x => x.Receiver)
-                .Include(x => x.Sender)
+                .Include(x => x.MessagePersons)
+                .ThenInclude(x => x.Account)
+                .Include(x => x.MessagePersons)
+                .ThenInclude(x => x.Type)
                 .SingleOrDefaultAsync(x => x.Id == messageId, cancellationToken);
 
             if (message == null)
@@ -87,20 +88,7 @@ namespace MailApp.Controllers
             message.MarkAsRead();
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
 
-            var viewModel = new MessageViewModel
-            {
-                MessageId = message.Id,
-                Sender = new AccountViewModel
-                {
-                    AccountId = message.Sender.Id,
-                    Nick = message.Sender.Nick,
-                    Email = message.Sender.Email,
-                },
-                Subject = message.Subject,
-                Text = message.Text,
-                SentDate = message.SentDate
-            };
-
+            var viewModel = new MessageViewModel(message);
             return PartialView(viewModel);
         }
 
@@ -109,14 +97,19 @@ namespace MailApp.Controllers
         {
             var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var lastReceivers = await MailAppDbContext.Messages
-                .Where(x => x.Sender == sender)
+                .Include(x => x.MessagePersons)
+                .ThenInclude(x => x.Account)
+                .Include(x => x.MessagePersons)
+                .ThenInclude(x => x.Type)
+                .Where(x => x.MessagePersons.Any(y => y.Type != MessagePersonType.Sender && y.Account == sender))
                 .OrderByDescending(x => x.SentDate)
-                .Select(x => x.Receiver)
                 .Distinct()
                 .Take(5)
                 .ToArrayAsync(cancellationToken);
 
             viewModel.LastReceivers = lastReceivers
+                .SelectMany(x => x.Receivers)
+                .Distinct()
                 .Select(x => new AccountViewModel(x))
                 .ToArray();
 
@@ -131,31 +124,47 @@ namespace MailApp.Controllers
                 //TODO: INFO ZE PUSTA WIADOMOSC
             }
 
-            var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var message = new Message
             {
                 Subject = request.Subject,
                 Text = request.Text,
-                Sender = sender,
-                SentDate = DateTime.Now
+                SentDate = DateTime.Now,
+                Notification = request.Notification
             };
-            if (request.Notification)
-            {
-                message.AddNotification();
-            }
 
-            if (request.Email == null)
+            if (request.Receiver == null)
             {
                 return BadRequest();
             }
 
-            var receiver = await MailAppDbContext.Accounts.SingleOrDefaultAsync(a => a.Email == request.Email, cancellationToken);
-            if (receiver == null)
+            var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            message.SetSender(sender);
+
+            async Task SetPersons(String addresses, Action<Account> f1, Action<Group> f2)
             {
-                return BadRequest();
+                foreach (var address in (addresses ?? String.Empty).Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray())
+                {
+                    var group = await MailAppDbContext.Groups.Include(x => x.GroupAccounts).ThenInclude(x => x.Account).SingleOrDefaultAsync(x => x.Name == address, cancellationToken);
+
+                    if (group != null)
+                    {
+                        f2(group);
+                    }
+                    else
+                    {
+                        var account = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Email == address, cancellationToken);
+                        if (account != null)
+                        {
+                            f1(account);
+                        }
+                    }
+                }
             }
 
-            message.AddReceiver(receiver);
+            await SetPersons(request.Receiver, account => message.AddReceiver(account), group => message.AddReceiver(group));
+            await SetPersons(request.Cc, account => message.AddCc(account), group => message.AddCc(group));
+            await SetPersons(request.Bcc, account => message.AddReceiver(account), group => message.AddBcc(group));
+
             MailAppDbContext.Messages.Add(message);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Index));

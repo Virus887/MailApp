@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MailApp.Infrastructure.Migrations
 {
     [DbContext(typeof(MailAppDbContext))]
-    [Migration("20201121170229_GroupOwner")]
-    partial class GroupOwner
+    [Migration("20201123190241_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,10 +76,10 @@ namespace MailApp.Infrastructure.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TypeId")
+                    b.Property<int>("TypeId")
                         .HasColumnType("int");
 
-                    b.HasKey("AccountId", "GroupId");
+                    b.HasKey("AccountId", "GroupId", "TypeId");
 
                     b.HasIndex("AccountId");
 
@@ -98,6 +98,9 @@ namespace MailApp.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("GroupAccountType");
@@ -105,11 +108,13 @@ namespace MailApp.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 2
+                            Id = 2,
+                            Name = "Member"
                         },
                         new
                         {
-                            Id = 1
+                            Id = 1,
+                            Name = "Owner"
                         });
                 });
 
@@ -121,20 +126,11 @@ namespace MailApp.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
                     b.Property<bool>("Notification")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SenderId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("SentDate")
                         .HasColumnType("datetime2");
@@ -147,13 +143,67 @@ namespace MailApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
                     b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("MailApp.Domain.MessagePerson", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AccountId", "MessageId", "TypeId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("MessagePerson");
+                });
+
+            modelBuilder.Entity("MailApp.Domain.MessagePersonType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("MessagePersonTypeId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MessagePersonType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Sender"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Receiver"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Cc"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bcc"
+                        });
                 });
 
             modelBuilder.Entity("MailApp.Domain.GroupAccount", b =>
@@ -172,22 +222,30 @@ namespace MailApp.Infrastructure.Migrations
 
                     b.HasOne("MailApp.Domain.GroupAccountType", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("MailApp.Domain.Message", b =>
+            modelBuilder.Entity("MailApp.Domain.MessagePerson", b =>
                 {
-                    b.HasOne("MailApp.Domain.Group", "Group")
+                    b.HasOne("MailApp.Domain.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MailApp.Domain.Account", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId");
+                    b.HasOne("MailApp.Domain.Message", "Message")
+                        .WithMany("MessagePersons")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MailApp.Domain.Account", "Sender")
+                    b.HasOne("MailApp.Domain.MessagePersonType", "Type")
                         .WithMany()
-                        .HasForeignKey("SenderId");
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

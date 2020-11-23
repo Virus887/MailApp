@@ -35,14 +35,6 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        public void AddNotification_True()
-        {
-            var m = new Message();
-            m.AddNotification();
-            Assert.True(m.Notification);
-        }
-
-        [Fact]
         public void DeleteNotification_False()
         {
             var m = new Message();
@@ -56,7 +48,7 @@ namespace MailApp.Tests
             var m = new Message();
             var a = new Account("nick1", "a@a.pl");
             m.AddReceiver(a);
-            Assert.NotNull(m.Receiver);
+            Assert.NotEmpty(m.Receivers);
         }
 
         [Theory]
@@ -65,23 +57,6 @@ namespace MailApp.Tests
         {
             var m = new Message();
             Assert.Throws<ArgumentNullException>(() => m.AddReceiver(a));
-        }
-
-        [Fact]
-        public void AddGroup_Group_Not_NULL()
-        {
-            var m = new Message();
-            var gr = new Group("group1", new Account("owner", "owner@owner.pl"));
-            m.AddGroup(gr);
-            Assert.NotNull(m.Group);
-        }
-
-        [Theory]
-        [InlineData(null)]
-        public void AddGroup_Throw_ArgumentNullException(Group a)
-        {
-            var m = new Message();
-            Assert.Throws<ArgumentNullException>(() => m.AddGroup(a));
         }
 
         [Fact]

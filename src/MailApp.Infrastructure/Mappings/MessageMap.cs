@@ -13,9 +13,10 @@ namespace MailApp.Infrastructure.Mappings
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName($"{nameof(Message)}Id");
 
-            builder.HasOne(x => x.Sender).WithMany();
-            builder.HasOne(x => x.Receiver).WithMany();
-            builder.HasOne(x => x.Group);
+            builder.Ignore(x => x.Sender);
+            builder.Ignore(x => x.Receivers);
+            builder.Ignore(x => x.Cc);
+            builder.Ignore(x => x.Bcc);
         }
     }
 }

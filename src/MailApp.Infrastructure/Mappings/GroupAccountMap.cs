@@ -9,7 +9,7 @@ namespace MailApp.Infrastructure.Mappings
         public void Configure(EntityTypeBuilder<GroupAccount> builder)
         {
             builder.ToTable(nameof(GroupAccount));
-            builder.HasKey(x => new {x.AccountId, x.GroupId});
+            builder.HasKey(x => new {x.AccountId, x.GroupId, x.TypeId});
 
             builder.HasIndex(x => x.AccountId);
             builder.HasIndex(x => x.GroupId);

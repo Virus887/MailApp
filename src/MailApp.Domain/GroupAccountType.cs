@@ -2,7 +2,7 @@
 {
     public class GroupAccountType : Entity<int>
     {
-        private string Name { get; set; }
+        public string Name { get; private set; }
 
         private GroupAccountType()
         {

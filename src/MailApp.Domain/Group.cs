@@ -9,7 +9,7 @@ namespace MailApp.Domain
         public string Name { get; private set; }
 
         public ICollection<GroupAccount> GroupAccounts { get; private set; } = new List<GroupAccount>();
-        public Account[] Members => GroupAccounts.Where(x => x.Type == GroupAccountType.Member).Select(x => x.Account).ToArray();
+        public Account[] Members => GroupAccounts.Select(x => x.Account).ToArray();
         public Account Owner => GroupAccounts.Single(x => x.Type == GroupAccountType.Owner).Account;
 
         private Group()
@@ -66,7 +66,7 @@ namespace MailApp.Domain
         public bool IsMember(Account account)
         {
             _ = account ?? throw new ArgumentNullException(nameof(account));
-            return Members.Contains(account) || IsOwner(account);
+            return Members.Contains(account);
         }
 
         public bool IsOwner(Account account)

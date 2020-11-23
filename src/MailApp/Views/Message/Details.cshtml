@@ -4,6 +4,16 @@
     <div class="row align-items-center" style="background-color: darkgrey;">
         <div class="col-sm-6">
             <h6> Od: @Model.Sender.Nick </h6>
+            @if (Model.Receivers.Length > 0)
+            {
+                <hr />
+                <h6> Do: @String.Join(";", Model.Receivers.Select(x => x.Nick)) </h6>
+            }
+            @if (Model.Cc.Length > 0)
+            {
+                <hr />
+                <h6> Cc: @String.Join(";", Model.Cc.Select(x => x.Nick)) </h6>
+            }
         </div>
         <div class="col-sm-4"></div>
         <div class="col-sm-2">

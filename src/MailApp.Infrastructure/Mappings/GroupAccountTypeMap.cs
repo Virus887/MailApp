@@ -8,7 +8,6 @@ namespace MailApp.Infrastructure.Mappings
     {
         public void Configure(EntityTypeBuilder<GroupAccountType> builder)
         {
-
             builder.ToTable(nameof(GroupAccountType));
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.HasKey(x => x.Id);

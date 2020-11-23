@@ -2,27 +2,26 @@
 
 namespace MailApp.Domain
 {
-    public class GroupAccount
+    public class MessagePerson
     {
         public int AccountId { get; private set; }
         public Account Account { get; private set; }
-        public int GroupId { get; private set; }
-        public Group Group { get; private set; }
-        public GroupAccountType Type { get; private set; }
+        public int MessageId { get; private set; }
+        public Message Message { get; private set; }
+        public MessagePersonType Type { get; private set; }
         public int TypeId { get; private set; }
 
-
-        private GroupAccount()
+        private MessagePerson()
         {
         }
 
-        public GroupAccount(Account account, Group group, GroupAccountType type)
+        public MessagePerson(Account account, Message message, MessagePersonType type)
         {
             Account = account ?? throw new ArgumentNullException(nameof(account));
-            Group = group ?? throw new ArgumentNullException(nameof(group));
+            Message = message ?? throw new ArgumentNullException(nameof(message));
             Type = type ?? throw new ArgumentNullException(nameof(type));
             AccountId = account.Id;
-            GroupId = group.Id;
+            MessageId = message.Id;
             TypeId = type.Id;
         }
     }
