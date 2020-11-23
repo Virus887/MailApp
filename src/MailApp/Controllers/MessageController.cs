@@ -29,16 +29,26 @@ namespace MailApp.Controllers
                 .ToArrayAsync(cancellationToken);
 
             //TODO: filtrowanie wiadomości po aktualnym użytkowniku
-            var messages = await MailAppDbContext.Messages
+            var queryable = MailAppDbContext.Messages
                 .Include(x => x.Sender)
                 .Include(x => x.Receiver)
-                .Where(x => requestModel.SenderId == null || x.Sender.Id == requestModel.SenderId)
+                .Where(x => requestModel.SenderId == null || x.Sender.Id == requestModel.SenderId);
+
+            if(!String.IsNullOrEmpty(requestModel.Search))
+            {
+                foreach (var part in requestModel.Search.Split(" "))
+                {
+                    queryable = queryable
+                        .Where(x => (x.Subject + x.Text).Contains(part));
+                }
+            }
+
+            var messages = await queryable
                 .ToDictionaryAsync(x => x.Id, cancellationToken);
 
             var viewModel = new MessagesViewModel
             {
                 SenderId = requestModel.SenderId,
-                MessageId = requestModel.MessageId,
                 Senders = senders
                     .Select(x => new AccountViewModel(x))
                     .ToArray(),
@@ -49,24 +59,6 @@ namespace MailApp.Controllers
                         .ToArray(),
                 }
             };
-
-            if (viewModel.MessageId.HasValue)
-            {
-                var message = messages[viewModel.MessageId.Value];
-                viewModel.Details = new MessageViewModel
-                {
-                    MessageId = message.Id,
-                    Sender = new AccountViewModel
-                    {
-                        AccountId = message.Sender.Id,
-                        Nick = message.Sender.Nick,
-                        Email = message.Sender.Email,
-                    },
-                    Subject = message.Subject,
-                    Text = message.Text,
-                    SentDate = message.SentDate
-                };
-            }
 
             return View(viewModel);
         }
