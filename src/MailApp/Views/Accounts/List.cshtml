@@ -1,0 +1,42 @@
+﻿@using MailApp.Models.Accounts
+@model MailApp.Models.Accounts.AccountsListViewModel
+
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control">
+    </div>
+    <div class="form-group">
+        <label asp-for="Nick"></label>
+        <input asp-for="Nick" class="form-control">
+    </div>
+    <div class="form-group">
+        <label asp-for="Sort"></label>
+        <select asp-for="Sort" class="form-control" asp-items="Enum.GetValues(typeof(AccountsQuery.SortingOptions)) .Cast<AccountsQuery.SortingOptions>() .Select(x => new SelectListItem(x.ToString(), x.ToString()))">
+            <option></option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Nick</th>
+        <th scope="col">Email</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var account in Model.Accounts)
+    {
+        <tr>
+            <td>@account.Nick</td>
+            <td>@account.Email</td>
+            <td>
+                <a asp-controller="Message" asp-action="NewMessage" asp-route-Email="@account.Email" class="btn btn-primary">Send</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

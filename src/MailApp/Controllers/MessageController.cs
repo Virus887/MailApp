@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MailApp.Domain;
 using MailApp.Infrastructure;
 using MailApp.Models;
+using MailApp.Models.Accounts;
 using MailApp.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

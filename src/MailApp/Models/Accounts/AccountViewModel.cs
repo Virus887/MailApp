@@ -1,6 +1,6 @@
 ﻿using MailApp.Domain;
 
-namespace MailApp.Models
+namespace MailApp.Models.Accounts
 {
     public class AccountViewModel
     {

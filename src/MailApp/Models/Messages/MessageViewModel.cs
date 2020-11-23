@@ -1,5 +1,6 @@
 ﻿using System;
 using MailApp.Domain;
+using MailApp.Models.Accounts;
 
 namespace MailApp.Models.Messages
 {

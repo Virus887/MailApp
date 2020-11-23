@@ -1,4 +1,6 @@
-﻿namespace MailApp.Models.Messages
+﻿using MailApp.Models.Accounts;
+
+namespace MailApp.Models.Messages
 {
     public class NewMessageViewModel
     {
