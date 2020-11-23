@@ -93,11 +93,20 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult RemoveGroup(int groupId) =>
-            View(new RemoveGroupViewModel
+        public async Task<IActionResult> RemoveGroup(int groupId, CancellationToken cancellationToken)
+        {
+            var group = await GetGroup(groupId, cancellationToken);
+            if (group == null)
             {
-                GroupId = groupId,
+                return NotFound();
+            }
+
+            return View(new RemoveGroupViewModel
+            {
+                GroupId = group.Id,
+                Name = group.Name
             });
+        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveGroup(RemoveGroupViewModel viewModel, CancellationToken cancellationToken)
