@@ -24,38 +24,45 @@ namespace MailApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(MessagesQueryViewModel requestModel, CancellationToken cancellationToken)
+        public async Task<IActionResult> Index(MessagesQuery query, CancellationToken cancellationToken)
         {
             var senders = await MailAppDbContext.Accounts
                 .ToArrayAsync(cancellationToken);
 
-            //TODO: filtrowanie wiadomości po aktualnym użytkowniku
-            var queryable = MailAppDbContext.Messages
+            var owner = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            var queryable =  MailAppDbContext.Messages
                 .Include(x => x.Sender)
                 .Include(x => x.Receiver)
-                .Where(x => requestModel.SenderId == null || x.Sender.Id == requestModel.SenderId);
+                .Where(x => query.SenderId == null || x.Sender.Id == query.SenderId)
+                .Where(x => x.Receiver == owner);
 
-            if(!String.IsNullOrEmpty(requestModel.Search))
+            if (!String.IsNullOrEmpty(query.Search))
             {
-                foreach (var part in requestModel.Search.Split(" "))
+                foreach (var part in query.Search.Split(" "))
                 {
-                    queryable = queryable
-                        .Where(x => (x.Subject + x.Text).Contains(part));
+                    queryable = queryable.Where(x => (x.Subject + x.Text).Contains(part));
                 }
             }
 
-            var messages = await queryable
-                .ToDictionaryAsync(x => x.Id, cancellationToken);
-
-            var viewModel = new MessagesViewModel
+            queryable = query.Sort switch
             {
-                SenderId = requestModel.SenderId,
+                MessagesQuery.SortingOptions.Subject => queryable.OrderBy(x => x.Subject),
+                MessagesQuery.SortingOptions.Date => queryable.OrderBy(x => x.SentDate),
+                MessagesQuery.SortingOptions.Nick => queryable.OrderBy(x => x.Sender.Nick),
+                _ => queryable.OrderBy(x => x.SentDate)
+            };
+
+            var messages = await queryable.ToArrayAsync(cancellationToken);
+
+            var viewModel = new MessagesListViewModel
+            {
+                SenderId = query.SenderId,
                 Senders = senders
                     .Select(x => new AccountViewModel(x))
                     .ToArray(),
                 MessageList = new MessageListViewModel
                 {
-                    Messages = messages.Values
+                    Messages = messages
                         .Select(x => new MessageViewModel(x))
                         .ToArray(),
                 }

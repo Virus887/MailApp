@@ -12,7 +12,9 @@
     @foreach (var groupViewModel in Model.Groups)
     {
         <tr>
-            <td><a asp-action="Details" asp-route-groupId="@groupViewModel.GroupId">@groupViewModel.Name</a></td>
+            <td>
+                <a asp-action="Details" asp-route-groupId="@groupViewModel.GroupId">@groupViewModel.Name</a>
+            </td>
         </tr>
     }
     </tbody>

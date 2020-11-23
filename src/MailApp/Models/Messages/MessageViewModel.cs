@@ -26,5 +26,5 @@ namespace MailApp.Models.Messages
             Subject = message.Subject;
             Text = message.Text;
         }
-    }
+    }  
 }

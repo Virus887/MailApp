@@ -1,4 +1,5 @@
-﻿@model MailApp.Models.Messages.MessagesViewModel
+﻿@using MailApp.Models.Messages
+@model MailApp.Models.Messages.MessagesListViewModel
 
 <div class="row mx-lg-n5">
     <div class="col-sm-3">
@@ -6,14 +7,22 @@
             <div>
                 <form asp-action="Index" method="get">
                     <div class="form-group">
+                        <label asp-for="Search"></label>
                         <input asp-for="Search" class="form-control">
                     </div>
                     <div class="form-group">
+                        <label asp-for="SenderId"></label>
                         <select class="form-control" asp-for="SenderId" asp-items="Model.Senders.Select(x => new SelectListItem(x.Nick, x.AccountId.ToString()))">
                             <option value="">All</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="form-group">
+                        <label asp-for="Sort"></label>
+                        <select asp-for="Sort" class="form-control" asp-items="Enum.GetValues(typeof(MessagesQuery.SortingOptions)).Cast<MessagesQuery.SortingOptions>().Select(x => new SelectListItem(x.ToString(), x.ToString()))">
+                            <option></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </form>
             </div>
             <div class="card-header">
@@ -22,12 +31,13 @@
             <div class="list-group">
                 @foreach (var message in Model.MessageList.Messages)
                 {
-                    <a asp-controller="Message"
-                       asp-action="Details"
-                       asp-route-MessageId="@message.MessageId"
-                       class="list-group-item list-group-item-action flex-column align-items-start"
-                       data-ajax="message-container"
-                       style="color: @(message.IsRead ? "" : "red")">
+                    <a
+                        asp-controller="Message"
+                        asp-action="Details"
+                        asp-route-MessageId="@message.MessageId"
+                        class="list-group-item list-group-item-action flex-column align-items-start"
+                        data-ajax="message-container"
+                        style="color: @(message.IsRead ? "" : "red")">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">@message.Sender.Nick</h6>
                             <small>@message.SentDate.Date</small>
