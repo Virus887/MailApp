@@ -98,6 +98,12 @@ namespace MailApp.Controllers
         [HttpGet("/Message/NewMessage")]
         public async Task<IActionResult> GetNewMessage(NewMessageViewModel viewModel, CancellationToken cancellationToken)
         {
+            await ReadLatestReceivers(viewModel, cancellationToken);
+            return View("NewMessage", viewModel);
+        }
+
+        private async Task ReadLatestReceivers(NewMessageViewModel viewModel, CancellationToken cancellationToken)
+        {
             var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var lastReceivers = await MailAppDbContext.Messages
                 .Include(x => x.MessagePersons)
@@ -115,13 +121,12 @@ namespace MailApp.Controllers
                 .Distinct()
                 .Select(x => new AccountViewModel(x))
                 .ToArray();
-
-            return View("NewMessage", viewModel);
         }
 
         [HttpPost("/Message/NewMessage")]
         public async Task<IActionResult> NewMessage(NewMessageViewModel request, CancellationToken cancellationToken)
         {
+            await ReadLatestReceivers(request, cancellationToken);
             if (!ModelState.IsValid)
             {
                 return View(request);
