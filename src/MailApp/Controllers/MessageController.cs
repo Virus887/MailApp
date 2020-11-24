@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,29 +30,31 @@ namespace MailApp.Controllers
                 .ToArrayAsync(cancellationToken);
 
             var owner = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
-            var queryable = MailAppDbContext.Messages
+            var messages = await MailAppDbContext.Messages
                 .Include(x => x.MessagePersons)
                 .ThenInclude(x => x.Account)
+                .ToArrayAsync(cancellationToken);
+
+            messages = messages
                 .Where(x => query.SenderId == null || x.Sender.Id == query.SenderId)
-                .Where(x => x.MessagePersons.Any(y => y.Type != MessagePersonType.Sender && y.Account == owner));
+                .Where(x => x.MessagePersons.Any(y => y.Type != MessagePersonType.Sender && y.Account == owner))
+                .ToArray();
 
             if (!String.IsNullOrEmpty(query.Search))
             {
                 foreach (var part in query.Search.Split(" "))
                 {
-                    queryable = queryable.Where(x => (x.Subject + x.Text).Contains(part));
+                    messages = messages.Where(x => (x.Subject + x.Text).Contains(part)).ToArray();
                 }
             }
 
-            queryable = query.Sort switch
+            messages = query.Sort switch
             {
-                MessagesQuery.SortingOptions.Subject => queryable.OrderBy(x => x.Subject),
-                MessagesQuery.SortingOptions.Date => queryable.OrderBy(x => x.SentDate),
-                MessagesQuery.SortingOptions.Nick => queryable.OrderBy(x => x.Sender.Nick),
-                _ => queryable.OrderBy(x => x.SentDate)
+                MessagesQuery.SortingOptions.Subject => messages.OrderBy(x => x.Subject).ToArray(),
+                MessagesQuery.SortingOptions.Date => messages.OrderBy(x => x.SentDate).ToArray(),
+                MessagesQuery.SortingOptions.Nick => messages.OrderBy(x => x.Sender.Nick).ToArray(),
+                _ => messages.OrderBy(x => x.SentDate).ToArray()
             };
-
-            var messages = await queryable.ToArrayAsync(cancellationToken);
 
             var viewModel = new MessagesListViewModel
             {
