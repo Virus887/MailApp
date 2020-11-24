@@ -122,9 +122,21 @@ namespace MailApp.Controllers
         [HttpPost("/Message/NewMessage")]
         public async Task<IActionResult> NewMessage(NewMessageViewModel request, CancellationToken cancellationToken)
         {
-            if (request.Subject == null)
+            if (!ModelState.IsValid)
             {
-                //TODO: INFO ZE PUSTA WIADOMOSC
+                return View(request);
+            }
+
+            if (string.IsNullOrEmpty(request.Receiver) && string.IsNullOrEmpty(request.Cc) && string.IsNullOrEmpty(request.Bcc))
+            {
+                ModelState.AddModelError(nameof(request.Receiver), "There is no receiver.");
+                return View(request);
+            }
+
+            if (string.IsNullOrEmpty(request.Subject) && string.IsNullOrEmpty(request.Text))
+            {
+                ModelState.AddModelError(nameof(request.Subject), "Message should have subject or text");
+                return View(request);
             }
 
             var message = new Message
@@ -135,13 +147,14 @@ namespace MailApp.Controllers
                 Notification = request.Notification
             };
 
-            if (request.Receiver == null)
+            var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            if (sender == null)
             {
                 return BadRequest();
             }
-
-            var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             message.SetSender(sender);
+
+            bool flag = true;
 
             async Task SetPersons(String addresses, Action<Account> f1, Action<Group> f2)
             {
@@ -160,13 +173,32 @@ namespace MailApp.Controllers
                         {
                             f1(account);
                         }
+                        else
+                        {
+                            flag = false;
+                        }
                     }
                 }
             }
 
             await SetPersons(request.Receiver, account => message.AddReceiver(account), group => message.AddReceiver(group));
+            if (flag == false)
+            {
+                ModelState.AddModelError(nameof(request.Receiver), "Invadlid mail or group name");
+                return View(request);
+            }
             await SetPersons(request.Cc, account => message.AddCc(account), group => message.AddCc(group));
+            if (flag == false)
+            {
+                ModelState.AddModelError(nameof(request.Cc), "Invadlid mail or group name");
+                return View(request);
+            }
             await SetPersons(request.Bcc, account => message.AddReceiver(account), group => message.AddBcc(group));
+            if (flag == false)
+            {
+                ModelState.AddModelError(nameof(request.Bcc), "Invadlid mail or group name");
+                return View(request);
+            }
 
             MailAppDbContext.Messages.Add(message);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);

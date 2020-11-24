@@ -35,7 +35,7 @@
 
     <div class="row" style="height: 2px; background: black;"></div>
 
-    <div class="overflow-auto">
+    <div class="overflow-auto" style="height:650px">
         <p>
             @Model.Text
         </p>
@@ -43,13 +43,12 @@
     <div class="row" style="height: 1px; background: black;"></div>
     <div class="row" style="height: 5px;"></div>
     <div class="row">
-        <div class="col-8"></div>
-        <div class="col-2">
-            
+        <div class="col-9"></div>
+        <div class="col-1">      
             <form asp-action="RemoveMessage" method="post">
                 <input type="hidden" asp-for="MessageId"/>
                 <button type="submit" class="btn btn-info btn-sm rounded-pill">
-                    Dodaj do kosza
+                    Remove
                 </button>
             </form>
         </div>
@@ -57,7 +56,7 @@
             <form asp-action="MarkAsUnread" method="post">
                 <input type="hidden" asp-for="MessageId" />
                 <button type="submit" class="btn btn-info btn-sm rounded-pill">
-                    Oznacz jako nieprzeczytane
+                    Mark as unread
                 </button>
             </form>
         </div>

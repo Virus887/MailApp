@@ -6,6 +6,7 @@
             <div class="card-header">
                 Kontakty:
             </div>
+            @if(Model.LastReceivers!=null) 
             @foreach (var receiver in Model.LastReceivers)
             {
                 <div class="list-group">
@@ -20,40 +21,65 @@
     </div>
 
     <div class="col-9">
-        <form asp-action="NewMessage" asp-controller="Message" method="post" role="form">
-            <div class="container-fluid rounded-bottom bg-white" style="border-style: outset;">
-                <div class="form-group">
-                    <label asp-for="Receiver">Do:</label>
-                    <input asp-for="Receiver" class="form-control">
-                    <span asp-validation-for="Receiver" class="text-danger"></span>
+        <div class="container-fluid rounded-bottom bg-white" style="border-style: outset;">
+            <div class="row" style="height: 10px;"></div>
+            <form asp-action="NewMessage" asp-controller="Message" asp-for-lastReceivers="Model.LastReceivers" method="post" role="form">
+                <div class="input-group mb-3 form-group">
+                    <label asp-for="Receiver" style="width: 70px">To:</label>
+                    <input asp-for="Receiver" class="form-control  @(ViewContext.ModelState.ContainsKey(nameof(Model.Receiver)) ? "is-invalid": "")" />
+                    <div class="text-danger invalid-feedback" style="margin-left:50px">
+                        @Html.ValidationMessageFor(x => x.Receiver)
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Cc">Cc:</label>
-                    <input asp-for="Cc" class="form-control">
-                    <span asp-validation-for="Cc" class="text-danger"></span>
+                <div class="input-group mb-3 form-group">
+                    <label asp-for="Cc" style="width:70px">Cc:</label>
+                    <input asp-for="Cc" class="form-control @(ViewContext.ModelState.ContainsKey(nameof(Model.Cc)) ? "is-invalid": "")" />
+                    <div class="text-danger invalid-feedback" style="margin-left:50px">
+                        @Html.ValidationMessageFor(x => x.Cc)
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Bcc">Bcc:</label>
-                    <input asp-for="Bcc" class="form-control">
-                    <span asp-validation-for="Bcc" class="text-danger"></span>
+                <div class="input-group mb-3 form-group">
+                    <label asp-for="Bcc" style="width: 70px">Bcc:</label>
+                    <input asp-for="Bcc" class="form-control @(ViewContext.ModelState.ContainsKey(nameof(Model.Bcc)) ?  "is-invalid": "")" />
+                    <div class="text-danger invalid-feedback" style="margin-left:50px">
+                        @Html.ValidationMessageFor(x => x.Bcc)
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Subject">Temat:</label>
-                    <input class="form-control" asp-for="Subject" />
-                </div>
-                <div class="form-group">
-                    <label asp-for="Notification">Notyfikacja</label>
-                    <input type="checkbox" asp-for="Notification" />
-                </div>
-                <div class="form-group">
-                    <label asp-for="Text">Treść:</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="19" asp-for="Text"></textarea>
+                <div class="input-group mb-3" form-group>
+                    <label asp-for="Subject" style="width: 70px">Subject:</label>
+                    <input asp-for="Subject" class="form-control @(ViewContext.ModelState.ContainsKey(nameof(Model.Subject)) ? "is-invalid": "")" />
+                    <div class="text-danger invalid-feedback" style="margin-left:50px">
+                        @Html.ValidationMessageFor(x => x.Subject)
+                    </div>
                 </div>
 
+                <div class="row" style="height: 5px;"></div>
+
+                <div class="row">
+                    <div class="col-sm-10"></div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" asp-for="Notification" disabled="disabled" />
+                        <label>Notification</label>
+                    </div>
+                </div>
+                
+                <div class="row" style="height: 5px;"></div>
+                <div class="row" style="height: 1px; background: black;"></div>
+                <div class="row" style="height: 10px;"></div>
+
+
+
+                <div class="input-group mb-3">
+                    <label asp-for="Text" style="width: 70px">Content:</label>
+                    <textarea asp-for="Text" class="form-control @(ViewContext.ModelState.ContainsKey(nameof(Model.Text)) ? "is-invalid": "")" id="exampleFormControlTextarea1" rows="19"></textarea>
+                    <div class="text-danger invalid-feedback" style="margin-left:50px">
+                        @Html.ValidationMessageFor(x => x.Text)
+                    </div>
+                </div>
                 <div class="row" style="height: 1px; background: black;"></div>
                 <div class="row" style="height: 5px;"></div>
                 <div class="row">
-                    <div class="col-10"></div>
+                    <div class="col-11"></div>
                     <div class="col-1">
                         <button type="submit" class="btn btn-info btn-sm rounded-pill">
                             Wyślij
@@ -61,7 +87,7 @@
                     </div>
                 </div>
                 <div class="row" style="height: 5px;"></div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>

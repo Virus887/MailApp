@@ -138,22 +138,33 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> AddMember(AddMemberViewModel viewModel, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(viewModel.GroupId, cancellationToken);
+
             if (group == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(viewModel.GroupId), "Group does not exist");
+                return View(viewModel);
             }
 
             if (!group.IsOwner(account))
             {
-                return Forbid();
+                ModelState.AddModelError(String.Empty, "Only group admin can delete it's members.");
+                return View(viewModel);
             }
 
+
             var newMember = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Nick == viewModel.AccountNick, cancellationToken);
+
             if (newMember == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(viewModel.AccountNick), "There is no Account with such nick.");
+                return View(viewModel);
             }
 
             group.AddAccount(newMember);
@@ -171,22 +182,32 @@ namespace MailApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveMember(RemoveMemberViewModel viewModel, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
             var group = await GetGroup(viewModel.GroupId, cancellationToken);
+
             if (group == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(viewModel.GroupId), "Group does not exist");
+                return View(viewModel);
             }
 
             if (!group.IsOwner(account))
             {
-                return Forbid();
+                ModelState.AddModelError(String.Empty, "Only admin can add members.");
+                return View(viewModel);
             }
 
             var member = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Nick == viewModel.AccountNick, cancellationToken);
+
             if (member == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(viewModel.AccountNick), "There is no Account with such nick.");
+                return View(viewModel);
             }
 
             group.RemoveAccount(member);

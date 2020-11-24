@@ -3,41 +3,53 @@
 
 <div class="row mx-lg-n5">
     <div class="col-sm-3">
-        <div class="card">
-            <div>
-                <form asp-action="Index" method="get">
-                    <div class="form-group">
-                        <label asp-for="Search"></label>
-                        <input asp-for="Search" class="form-control">
+        <div class="container rounded-bottom bg-info" style="border-style:ridge">
+            <form asp-action="Index" method="get">
+                <div class="row" style="height:5px"></div>
+                <div class="form-group">
+                    <input asp-for="Search" class="form-control" placeholder="Search...">
+                </div>
+                <div class="row">
+                    <div class="col-3 align-items-lg-center">
+                        <label asp-for="SenderId">Sender Id:</label>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="SenderId"></label>
+                    <div class="col-9">
                         <select class="form-control" asp-for="SenderId" asp-items="Model.Senders.Select(x => new SelectListItem(x.Nick, x.AccountId.ToString()))">
                             <option value="">All</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Sort"></label>
+                </div>
+                <div class="row" style="height:5px"></div>
+                <div class="row">
+                    <div class="col-3 align-items-lg-center">
+                        <label asp-for="Sort">Sort by:</label>
+                    </div>
+                    <div class="col-9">
                         <select asp-for="Sort" class="form-control" asp-items="Enum.GetValues(typeof(MessagesQuery.SortingOptions)).Cast<MessagesQuery.SortingOptions>().Select(x => new SelectListItem(x.ToString(), x.ToString()))">
                             <option></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
-            </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+                <div class="row" style="height:5px"></div>
+            </form>
+        </div>
+
+        <div class="row" style="height:5px"></div>
+
+        <div class="card">
             <div class="card-header">
                 New Messages:
             </div>
             <div class="list-group">
                 @foreach (var message in Model.MessageList.Messages)
                 {
-                    <a
-                        asp-controller="Message"
-                        asp-action="Details"
-                        asp-route-MessageId="@message.MessageId"
-                        class="list-group-item list-group-item-action flex-column align-items-start"
-                        data-ajax="message-container"
-                        style="color: @(message.IsRead ? "" : "red")">
+                    <a asp-controller="Message"
+                       asp-action="Details"
+                       asp-route-MessageId="@message.MessageId"
+                       class="list-group-item list-group-item-action flex-column align-items-start"
+                       data-ajax="message-container"
+                       style="color: @(message.IsRead ? "" : "red")">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">@message.Sender.Nick</h6>
                             <small>@message.SentDate.Date</small>
@@ -48,7 +60,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-7" id="message-container">
+    <div class="col-sm-8" id="message-container">
     </div>
 </div>
 
