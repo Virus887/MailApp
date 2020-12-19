@@ -65,7 +65,7 @@
 </div>
 
 <script>
-    $('a[data-ajax]').click(function(ev) {
+    $('a[data-ajax]').click(function (ev) {
         ev.preventDefault();
         var el = $(this);
         var url = this.href;
@@ -73,14 +73,14 @@
         var container = $('#' + containerId);
 
         fetch(url)
-            .then(function(res) {
+            .then(function (res) {
                 return res.text();
             })
-            .then(function(body) {
+            .then(function (body) {
                 container.html(body);
                 el.css('color', '');
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 container.text('Error during fetching data');
             });
     });

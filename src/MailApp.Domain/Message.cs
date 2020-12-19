@@ -10,11 +10,12 @@ namespace MailApp.Domain
         public Account[] Receivers => MessagePersons.Where(x => x.Type == MessagePersonType.Receiver).Select(x => x.Account).ToArray();
         public Account[] Cc => MessagePersons.Where(x => x.Type == MessagePersonType.Cc).Select(x => x.Account).ToArray();
         public Account[] Bcc => MessagePersons.Where(x => x.Type == MessagePersonType.Bcc).Select(x => x.Account).ToArray();
-
         public ICollection<MessagePerson> MessagePersons { get; set; } = new List<MessagePerson>();
+        public ICollection<MessageAttachment> MessageAttachments { get; set; } = new List<MessageAttachment>();
 
         public string Subject { get; set; }
         public string Text { get; set; }
+
         public DateTime SentDate { get; set; }
 
         /// <summary>
@@ -104,6 +105,17 @@ namespace MailApp.Domain
             foreach (var member in group.Members)
             {
                 AddBcc(member);
+            }
+        }
+
+        public void AddAttachments(params MessageAttachment[] messageAttachments)
+        {
+            foreach (var attachment in messageAttachments)
+            {
+                if (MessageAttachments.All(x => x.ExternalId != attachment.ExternalId))
+                {
+                    MessageAttachments.Add(attachment);
+                }
             }
         }
 

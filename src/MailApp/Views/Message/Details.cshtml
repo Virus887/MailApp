@@ -43,10 +43,20 @@
     <div class="row" style="height: 1px; background: black;"></div>
     <div class="row" style="height: 5px;"></div>
     <div class="row">
-        <div class="col-9"></div>
-        <div class="col-1">      
+        <div class="col-3">
+            <div class="list-group">
+                @foreach (var attachment in Model.Attachments)
+                {
+                    <a asp-action="DownloadAttachments" asp-route-attachmentId="@attachment.Key" asp-route-messageId="@Model.MessageId" method="get" class="btn btn-info btn-sm rounded-pill">
+                        @attachment.Value
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-6"></div>
+        <div class="col-1">
             <form asp-action="RemoveMessage" method="post">
-                <input type="hidden" asp-for="MessageId"/>
+                <input type="hidden" asp-for="MessageId" />
                 <button type="submit" class="btn btn-info btn-sm rounded-pill">
                     Remove
                 </button>
@@ -60,6 +70,7 @@
                 </button>
             </form>
         </div>
+
     </div>
     <div class="row" style="height: 5px;"></div>
 </div>

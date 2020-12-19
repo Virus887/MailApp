@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using MailApp.Domain;
 using MailApp.Infrastructure;
 using MailApp.Models.Accounts;
@@ -16,11 +16,13 @@ namespace MailApp.Controllers
     {
         private MailAppDbContext MailAppDbContext { get; }
         private IAccountProvider AccountProvider { get; }
+        private BlobContainerClient ContainerClient { get; }
 
-        public MessageController(MailAppDbContext mailAppDbContext, IAccountProvider accountProvider)
+        public MessageController(MailAppDbContext mailAppDbContext, IAccountProvider accountProvider, BlobContainerClient containerClient)
         {
             MailAppDbContext = mailAppDbContext;
             AccountProvider = accountProvider;
+            ContainerClient = containerClient;
         }
 
         [HttpGet]
@@ -77,6 +79,7 @@ namespace MailApp.Controllers
         public async Task<IActionResult> Details(int messageId, CancellationToken cancellationToken)
         {
             var message = await MailAppDbContext.Messages
+                .Include(x => x.MessageAttachments)
                 .Include(x => x.MessagePersons)
                 .ThenInclude(x => x.Account)
                 .Include(x => x.MessagePersons)
@@ -93,6 +96,29 @@ namespace MailApp.Controllers
 
             var viewModel = new MessageViewModel(message);
             return PartialView(viewModel);
+        }
+
+        [HttpGet("/Message/Details/{messageId}/Attachments/{attachmentId}")]
+        public async Task<IActionResult> DownloadAttachments(int messageId, string attachmentId, CancellationToken cancellationToken)
+        {
+            var message = await MailAppDbContext.Messages
+                .Include(x => x.MessageAttachments)
+                .SingleOrDefaultAsync(x => x.Id == messageId, cancellationToken);
+
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            var attachment = message.MessageAttachments.SingleOrDefault(x => x.ExternalId == attachmentId);
+            if (attachment == null)
+            {
+                return NotFound();
+            }
+
+            var blobClient = ContainerClient.GetBlobClient(attachmentId);
+            var blobInfo = await blobClient.DownloadAsync(cancellationToken);
+            return File(blobInfo.Value.Content, attachment.Type, attachment.Name);
         }
 
         [HttpGet("/Message/NewMessage")]
@@ -123,10 +149,12 @@ namespace MailApp.Controllers
                 .ToArray();
         }
 
+
         [HttpPost("/Message/NewMessage")]
         public async Task<IActionResult> NewMessage(NewMessageViewModel request, CancellationToken cancellationToken)
         {
             await ReadLatestReceivers(request, cancellationToken);
+
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -149,17 +177,30 @@ namespace MailApp.Controllers
                 Subject = request.Subject,
                 Text = request.Text,
                 SentDate = DateTime.Now,
-                Notification = request.Notification
+                Notification = request.Notification,
             };
 
             var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+
+            foreach (var i in request.FileForm)
+            {
+                var fileName = i.FileName;
+                var contentType = i.ContentType;
+                var blobId = Guid.NewGuid().ToString();
+                message.AddAttachments(new MessageAttachment(blobId, fileName, contentType));
+
+                var blobClient = ContainerClient.GetBlobClient(blobId);
+                await blobClient.UploadAsync(i.OpenReadStream(), true, cancellationToken);
+            }
+
             if (sender == null)
             {
                 return BadRequest();
             }
+
             message.SetSender(sender);
 
-            bool flag = true;
+            var flag = true;
 
             async Task SetPersons(String addresses, Action<Account> f1, Action<Group> f2)
             {
@@ -192,12 +233,14 @@ namespace MailApp.Controllers
                 ModelState.AddModelError(nameof(request.Receiver), "Invadlid mail or group name");
                 return View(request);
             }
+
             await SetPersons(request.Cc, account => message.AddCc(account), group => message.AddCc(group));
             if (flag == false)
             {
                 ModelState.AddModelError(nameof(request.Cc), "Invadlid mail or group name");
                 return View(request);
             }
+
             await SetPersons(request.Bcc, account => message.AddReceiver(account), group => message.AddBcc(group));
             if (flag == false)
             {

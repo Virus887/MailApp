@@ -1,4 +1,5 @@
 ﻿using System;
+using Azure.Storage.Blobs;
 using MailApp.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
@@ -21,6 +22,7 @@ namespace MailApp
 
         public IConfiguration Configuration { get; }
         public String MailAppConnectionString => Configuration.GetConnectionString("MailApp");
+        public String AzureStorageConnectionString => Configuration.GetConnectionString("AzureStorage");
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -37,6 +39,12 @@ namespace MailApp
 
             services.AddHttpContextAccessor();
             services.AddScoped<IAccountProvider>(sp => new CacheAccountProvider(ActivatorUtilities.CreateInstance<AccountProvider>(sp)));
+            services.AddSingleton((sp) =>
+            {
+                var blobServiceClient = new BlobServiceClient(AzureStorageConnectionString);
+                var containerClient = blobServiceClient.GetBlobContainerClient("attachments");
+                return containerClient;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
