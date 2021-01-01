@@ -18,21 +18,32 @@ namespace MailApp.Domain
 
         public DateTime SentDate { get; set; }
 
-        /// <summary>
-        /// Ustawiana na False, jedyny moment gdy sie tym przejmujemy to Odebrane w Box
-        /// </summary>
-        public bool IsRead { get; private set; }
+        public bool IsRead(Account account) =>
+            MessagePersons.Where(x => x.Account == account).Any(x => x.IsRead);
+
+        public void MarkAsRead(Account account)
+        {
+            foreach (var messagePerson in MessagePersons.Where(x => x.Account == account))
+            {
+                messagePerson.IsRead = true;
+            }
+        }
+
+        public void MarkAsUnread(Account account)
+        {
+            foreach (var messagePerson in MessagePersons.Where(x => x.Account == account))
+            {
+                messagePerson.IsRead = false;
+            }
+        }
 
         public bool Notification { get; set; }
 
         public Message()
         {
-            IsRead = false;
             Notification = false;
         }
 
-        public void MarkAsRead() => IsRead = true;
-        public void MarkAsUnRead() => IsRead = false;
         public void DeleteNotification() => Notification = false;
 
         public void SetSender(Account sender)

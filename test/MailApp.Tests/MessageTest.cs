@@ -12,26 +12,12 @@ namespace MailApp.Tests
             var m = new Message();
         }
 
-        [Fact]
-        public void Ctor_IsRead_False()
-        {
-            var m = new Message();
-            Assert.False(m.IsRead);
-        }
 
         [Fact]
         public void Ctor_Notification_False()
         {
             var m = new Message();
             Assert.False(m.Notification);
-        }
-
-        [Fact]
-        public void MarkAsUnRead_False()
-        {
-            var m = new Message();
-            m.MarkAsUnRead();
-            Assert.False(m.IsRead);
         }
 
         [Fact]
@@ -67,7 +53,6 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        //przedzial 2 sekund
         public void SendMessage_DateTime_Equals_Now()
         {
             var message = new Message();

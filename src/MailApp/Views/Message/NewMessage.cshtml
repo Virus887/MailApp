@@ -60,8 +60,8 @@
                 <div class="row">
                     <div class="col-sm-10"></div>
                     <div class="col-sm-2">
-                        <input type="checkbox" asp-for="Notification" disabled="disabled"/>
-                        <label>Notification</label>
+                        <input type="checkbox" asp-for="Notification" />
+                        <label>Powiadomienie</label>
                     </div>
                 </div>
                 <div class="input-group">
@@ -91,7 +91,7 @@
                 <div class="row">
                     <div class="col-11"></div>
                     <div class="col-1">
-                        <button type="submit" class="btn btn-info btn-sm rounded-pill">
+                        <button type="submit" class="btn btn-info btn-sm rounded-pill" data-toggle="modal" data-target="#exampleModal">
                             Wyślij
                         </button>
                     </div>

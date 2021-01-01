@@ -22,17 +22,17 @@ namespace MailApp.Models.Messages
         {
         }
 
-        public MessageViewModel(Message message)
+        public MessageViewModel(Message message, Account account)
         {
             MessageId = message.Id;
             Sender = new AccountViewModel(message.Sender);
             Receivers = message.Receivers.Select(x => new AccountViewModel(x)).ToArray();
             Cc = message.Cc.Select(x => new AccountViewModel(x)).ToArray();
             SentDate = message.SentDate;
-            IsRead = message.IsRead;
             Subject = message.Subject;
             Text = message.Text;
             Attachments = message.MessageAttachments.ToDictionary(x => x.ExternalId, x => x.Name);
+            IsRead = message.IsRead(account);
         }
     }
 }

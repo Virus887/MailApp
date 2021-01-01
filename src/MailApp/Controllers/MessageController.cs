@@ -7,6 +7,7 @@ using MailApp.Domain;
 using MailApp.Infrastructure;
 using MailApp.Models.Accounts;
 using MailApp.Models.Messages;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,11 +68,10 @@ namespace MailApp.Controllers
                 MessageList = new MessageListViewModel
                 {
                     Messages = messages
-                        .Select(x => new MessageViewModel(x))
+                        .Select(x => new MessageViewModel(x, owner))
                         .ToArray(),
                 }
             };
-
             return View(viewModel);
         }
 
@@ -91,10 +91,12 @@ namespace MailApp.Controllers
                 return NotFound();
             }
 
-            message.MarkAsRead();
+            var currentAccount = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            message.MarkAsRead(currentAccount);
+
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
 
-            var viewModel = new MessageViewModel(message);
+            var viewModel = new MessageViewModel(message, currentAccount);
             return PartialView(viewModel);
         }
 
@@ -182,7 +184,7 @@ namespace MailApp.Controllers
 
             var sender = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
 
-            foreach (var i in request.FileForm)
+            foreach (var i in request.FileForm ?? new IFormFile[0])
             {
                 var fileName = i.FileName;
                 var contentType = i.ContentType;
@@ -278,7 +280,8 @@ namespace MailApp.Controllers
                 return BadRequest();
             }
 
-            message.MarkAsUnRead();
+            var currentAccount = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            message.MarkAsUnread(currentAccount);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Index));
         }

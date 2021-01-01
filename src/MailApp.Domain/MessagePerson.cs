@@ -10,6 +10,7 @@ namespace MailApp.Domain
         public Message Message { get; private set; }
         public MessagePersonType Type { get; private set; }
         public int TypeId { get; private set; }
+        public bool IsRead { get; set; }
 
         private MessagePerson()
         {
@@ -23,6 +24,7 @@ namespace MailApp.Domain
             AccountId = account.Id;
             MessageId = message.Id;
             TypeId = type.Id;
+            IsRead = false;
         }
     }
 }
