@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp.Domain", "src\MailA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailApp.Infrastructure", "src\MailApp.Infrastructure\MailApp.Infrastructure.csproj", "{640C105D-CFC6-4401-99BB-F9281FCDABEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailApp.selenium", "MailApp.selenium\MailApp.selenium.csproj", "{103D4C44-F16D-457D-A8A8-181376C5AEA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{640C105D-CFC6-4401-99BB-F9281FCDABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{640C105D-CFC6-4401-99BB-F9281FCDABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{640C105D-CFC6-4401-99BB-F9281FCDABEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{103D4C44-F16D-457D-A8A8-181376C5AEA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{103D4C44-F16D-457D-A8A8-181376C5AEA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{103D4C44-F16D-457D-A8A8-181376C5AEA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{103D4C44-F16D-457D-A8A8-181376C5AEA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{444D670E-88DC-4E93-A095-E4F408278BEA} = {01F6CFB9-13F4-43E6-883C-936D4EF90E46}
 		{B5D196B6-9654-4B9D-A0B4-CB0273A37A5C} = {94DDDC94-9573-4E94-B002-9A2921F2103D}
 		{640C105D-CFC6-4401-99BB-F9281FCDABEC} = {94DDDC94-9573-4E94-B002-9A2921F2103D}
+		{103D4C44-F16D-457D-A8A8-181376C5AEA5} = {01F6CFB9-13F4-43E6-883C-936D4EF90E46}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0351F75B-576F-4A58-A47F-7A1BC147F1C2}
