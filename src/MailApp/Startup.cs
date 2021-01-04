@@ -112,12 +112,20 @@ namespace MailApp
 
                 endpoints.MapGet($"/jobs/{nameof(NotificationSenderJob)}", context =>
                     ActivatorUtilities.CreateInstance<NotificationSenderJob>(context.RequestServices).SendNotifications());
+
+                endpoints.MapGet($"/jobs/{nameof(RetentionJob)}", context =>
+                    ActivatorUtilities.CreateInstance<RetentionJob>(context.RequestServices).RemoveOldAttachments());
             });
 
             //Hangfire
             jobManager.AddOrUpdate("",
                 () => ActivatorUtilities.CreateInstance<NotificationSenderJob>(sp).SendNotifications()
                 , Cron.Daily);
+
+            jobManager.AddOrUpdate("",
+                () => ActivatorUtilities.CreateInstance<RetentionJob>(sp).RemoveOldAttachments()
+                , Cron.Daily);
+
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
