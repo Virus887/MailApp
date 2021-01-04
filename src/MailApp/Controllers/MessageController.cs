@@ -9,7 +9,9 @@ using MailApp.Models.Accounts;
 using MailApp.Models.Messages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MailApp.Controllers
 {
@@ -76,6 +78,8 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("/Message/Details/{messageId}")]
+        [SwaggerOperation(Summary = "Get information about message",
+            Description = "Returns partial view showing content and all information about message with specified Id.")]
         public async Task<IActionResult> Details(int messageId, CancellationToken cancellationToken)
         {
             var message = await MailAppDbContext.Messages
@@ -101,6 +105,8 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("/Message/Details/{messageId}/Attachments/{attachmentId}")]
+        [SwaggerOperation(Summary = "Download attachments from message",
+            Description = "Downloads attachment with given Id from message with given Id.")]
         public async Task<IActionResult> DownloadAttachments(int messageId, string attachmentId, CancellationToken cancellationToken)
         {
             var message = await MailAppDbContext.Messages
@@ -124,6 +130,7 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("/Message/NewMessage")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> GetNewMessage(NewMessageViewModel viewModel, CancellationToken cancellationToken)
         {
             await ReadLatestReceivers(viewModel, cancellationToken);
@@ -151,8 +158,10 @@ namespace MailApp.Controllers
                 .ToArray();
         }
 
-
         [HttpPost("/Message/NewMessage")]
+        [SwaggerOperation(Summary = "Create new message",
+            Description = "Creates a new message and sends it to appropriate receivers. Returns default mail app view." +
+                          "There must be at least one receiver(casual, Bcc or CC) and subject must be not empty to send a message.")]
         public async Task<IActionResult> NewMessage(NewMessageViewModel request, CancellationToken cancellationToken)
         {
             await ReadLatestReceivers(request, cancellationToken);
@@ -255,7 +264,8 @@ namespace MailApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
+        [SwaggerOperation(Summary = "Remove message", Description = "Removes message with given Id from database. Returns default mail app view.")]
         public async Task<IActionResult> RemoveMessage(RemoveMessageViewModel m, CancellationToken cancellationToken)
         {
             var message = await MailAppDbContext.Messages.SingleOrDefaultAsync(x => x.Id == m.MessageId, cancellationToken);
@@ -270,7 +280,8 @@ namespace MailApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
+        [SwaggerOperation(Summary = "Mark message as unread", Description = "Changes message with given Id IsRead property to false. Returns default mail app view.")]
         public async Task<IActionResult> MarkAsUnread(MarkAsUnreadViewModel m, CancellationToken cancellationToken)
         {
             var message = await MailAppDbContext.Messages.SingleOrDefaultAsync(x => x.Id == m.MessageId, cancellationToken);

@@ -6,6 +6,7 @@ using MailApp.Infrastructure;
 using MailApp.Models.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MailApp.Controllers
 {
@@ -17,7 +18,9 @@ namespace MailApp.Controllers
         {
             MailAppDbContext = mailAppDbContext;
         }
-
+        
+        [HttpGet]
+        [SwaggerOperation(Summary = "List all of the accounts")]
         public async Task<IActionResult> Index(AccountsQuery query, CancellationToken cancellationToken)
         {
             var queryable = MailAppDbContext.Accounts

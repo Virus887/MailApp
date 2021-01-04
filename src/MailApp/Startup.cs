@@ -17,6 +17,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using RestEase;
+using Microsoft.OpenApi.Models;
+using System.IO;
+using System.Reflection;
 
 namespace MailApp
 {
@@ -27,11 +30,9 @@ namespace MailApp
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-
-        public String MailAppConnectionString => Configuration.GetConnectionString("MailApp");
-        public String AzureStorageConnectionString => Configuration.GetConnectionString("AzureStorage");
+        private IConfiguration Configuration { get; }
+        private String MailAppConnectionString => Configuration.GetConnectionString("MailApp");
+        private String AzureStorageConnectionString => Configuration.GetConnectionString("AzureStorage");
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -56,7 +57,7 @@ namespace MailApp
             });
 
             services.Configure<NotificationClientOption>(x => Configuration.GetSection(nameof(NotificationClientOption)).Bind(x));
-            
+
             services
                 .AddHttpClient(nameof(INotificationClient), (serviceProvider, httpClient) =>
                 {
@@ -66,8 +67,21 @@ namespace MailApp
                 })
                 .AddTypedClient(RestClient.For<INotificationClient>);
 
+            //hangfire
             services.AddHangfire(x => x.UseSqlServerStorage(MailAppConnectionString));
             services.AddHangfireServer();
+
+            //swagger
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("docs", new OpenApiInfo
+                {
+                    Title = "API Documentation",
+                    Version = "v1"
+                });
+                x.IgnoreObsoleteProperties();
+                x.EnableAnnotations();
+            });
         }
 
 
@@ -105,6 +119,14 @@ namespace MailApp
                 , Cron.Daily);
             app.UseHangfireDashboard();
             app.UseHangfireServer();
+
+            //swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/docs/swagger.json", "API Documentation");
+                x.DefaultModelsExpandDepth(-1);
+            });
         }
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MailApp</name>
+    </assembly>
+    <members>
+        <member name="M:MailApp.Controllers.GroupsController.List(System.Threading.CancellationToken)">
+            <response code="200">List all of the groups</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.GroupsController.Details(System.Int32,System.Threading.CancellationToken)">
+            <response code="200">Returns information about group</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.GroupsController.AddGroup(MailApp.Models.Groups.AddGroupViewModel,System.Threading.CancellationToken)">
+            <response code="200">Creates new group</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.GroupsController.RemoveGroup(MailApp.Models.Groups.RemoveGroupViewModel,System.Threading.CancellationToken)">
+            <response code="200">Removes group</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.GroupsController.AddMember(MailApp.Models.Groups.AddMemberViewModel,System.Threading.CancellationToken)">
+            <response code="200">Adds new group member</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.GroupsController.RemoveMember(MailApp.Models.Groups.RemoveMemberViewModel,System.Threading.CancellationToken)">
+            <response code="200">Removes group member</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.MessageController.Details(System.Int32,System.Threading.CancellationToken)">
+            <response code="200">Returns information about message</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.MessageController.DownloadAttachments(System.Int32,System.String,System.Threading.CancellationToken)">
+            <response code="200">Downloads attachments</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.MessageController.NewMessage(MailApp.Models.Messages.NewMessageViewModel,System.Threading.CancellationToken)">
+            <response code="200">Sends new message</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.MessageController.RemoveMessage(MailApp.Models.Messages.RemoveMessageViewModel,System.Threading.CancellationToken)">
+            <response code="200">Removes message</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="M:MailApp.Controllers.MessageController.MarkAsUnread(MailApp.Models.Messages.MarkAsUnreadViewModel,System.Threading.CancellationToken)">
+            <response code="200">Marks message as read</response>
+            <response code="404">Some error ocured</response>  
+        </member>
+        <member name="T:MailApp.EnsureAccountActionFilter">
+            <summary>
+            Zadaniem tego filtra jest upewnienie się, że Account dla danego użytkownika wykonujacego żądanie jest już stworzony
+            </summary>
+        </member>
+        <member name="T:MailApp.EnsureEntitiesAreAttached">
+            <summary>
+            Ten filtr pozwala oznaczyć encje jako dodane, żeby EF nie dodawał ich wielokrotnie do tabeli
+            </summary>
+        </member>
+    </members>
+</doc>

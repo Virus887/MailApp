@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,10 +8,10 @@ using MailApp.Infrastructure;
 using MailApp.Models.Groups;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MailApp.Controllers
 {
-    // TODO: ujednoolićić obsługę niepoprawnych danych
     [Route("/Groups")]
     public class GroupsController : Controller
     {
@@ -30,6 +31,8 @@ namespace MailApp.Controllers
                 .SingleOrDefaultAsync(x => x.Id == groupId, cancellationToken);
 
         [HttpGet]
+        [SwaggerOperation(Summary = "List all of the groups",
+            Description = "Returns view with global list of existing groups.")]
         public async Task<IActionResult> List(CancellationToken cancellationToken)
         {
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
@@ -53,6 +56,8 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("{groupId}")]
+        [SwaggerOperation(Summary = "Get information about group",
+            Description = "Returns view with information about group with specified Id.")]
         public async Task<IActionResult> Details(int groupId, CancellationToken cancellationToken)
         {
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
@@ -80,9 +85,11 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult AddGroup() => View();
 
         [HttpPost("[action]")]
+        [SwaggerOperation(Summary = "Create new group", Description = "Creates new group with given name and returns default group list view.")]
         public async Task<IActionResult> AddGroup(AddGroupViewModel viewModel, CancellationToken cancellationToken)
         {
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
@@ -93,6 +100,7 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> RemoveGroup(int groupId, CancellationToken cancellationToken)
         {
             var group = await GetGroup(groupId, cancellationToken);
@@ -109,6 +117,7 @@ namespace MailApp.Controllers
         }
 
         [HttpPost("[action]")]
+        [SwaggerOperation(Summary = "Remove group", Description = "Removes group with specified Id from database and returns default group list view.")]
         public async Task<IActionResult> RemoveGroup(RemoveGroupViewModel viewModel, CancellationToken cancellationToken)
         {
             var account = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
@@ -129,6 +138,7 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult AddMember(int groupId) =>
             View(new AddMemberViewModel
             {
@@ -136,6 +146,7 @@ namespace MailApp.Controllers
             });
 
         [HttpPost("[action]")]
+        [SwaggerOperation(Summary = "Add new member to group", Description = "Adds account with specified Id to already existing group and returns default groups view.")]
         public async Task<IActionResult> AddMember(AddMemberViewModel viewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -173,6 +184,7 @@ namespace MailApp.Controllers
         }
 
         [HttpGet("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult RemoveMember(int groupId) =>
             View(new RemoveMemberViewModel
             {
@@ -180,6 +192,7 @@ namespace MailApp.Controllers
             });
 
         [HttpPost("[action]")]
+        [SwaggerOperation(Summary = "Remove group member", Description = "Removes account with specified Id from already existing group and returns default groups view.")]
         public async Task<IActionResult> RemoveMember(RemoveMemberViewModel viewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
