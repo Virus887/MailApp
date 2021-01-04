@@ -36,6 +36,7 @@ namespace MailApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry();
             services.AddControllersWithViews(x =>
             {
                 x.Filters.Add(new AuthorizeFilter());

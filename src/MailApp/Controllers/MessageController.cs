@@ -7,6 +7,7 @@ using MailApp.Domain;
 using MailApp.Infrastructure;
 using MailApp.Models.Accounts;
 using MailApp.Models.Messages;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -20,12 +21,14 @@ namespace MailApp.Controllers
         private MailAppDbContext MailAppDbContext { get; }
         private IAccountProvider AccountProvider { get; }
         private BlobContainerClient ContainerClient { get; }
+        private TelemetryClient TelemetryClient { get; }
 
-        public MessageController(MailAppDbContext mailAppDbContext, IAccountProvider accountProvider, BlobContainerClient containerClient)
+        public MessageController(MailAppDbContext mailAppDbContext, IAccountProvider accountProvider, BlobContainerClient containerClient, TelemetryClient telemetryClient)
         {
             MailAppDbContext = mailAppDbContext;
             AccountProvider = accountProvider;
             ContainerClient = containerClient;
+            TelemetryClient = telemetryClient;
         }
 
         [HttpGet]
@@ -261,6 +264,7 @@ namespace MailApp.Controllers
 
             MailAppDbContext.Messages.Add(message);
             await MailAppDbContext.SaveChangesAsync(cancellationToken);
+            TelemetryClient.TrackEvent("Message sent");
             return RedirectToAction(nameof(Index));
         }
 
