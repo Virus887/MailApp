@@ -55,7 +55,6 @@ namespace MailApp.Domain
             {
                 MessagePersons.Remove(actualReceiver);
             }
-
             MessagePersons.Add(new MessagePerson(sender, this, MessagePersonType.Sender));
         }
 
@@ -118,6 +117,8 @@ namespace MailApp.Domain
                 AddBcc(member);
             }
         }
+        
+
 
         public void AddAttachments(params MessageAttachment[] messageAttachments)
         {
@@ -130,24 +131,7 @@ namespace MailApp.Domain
             }
         }
 
-        public void SendMessage()
-        {
-            if (Receivers.Length == 0)
-            {
-                //brak odbiorcy
-            }
+        
 
-            if (String.IsNullOrEmpty(Subject))
-            {
-                //komunikat czy na pewno chcesz wyslac pusta wiadomosc
-            }
-
-            if (Notification)
-            {
-                //wysylanie notyfikacji
-            }
-
-            SentDate = DateTime.Now;
-        }
     }
 }

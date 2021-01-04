@@ -16,9 +16,12 @@ namespace MailApp.Domain
 
         public MessageAttachment(string externalId, string name, string type)
         {
-            ExternalId = externalId ?? throw new ArgumentNullException(nameof(externalId));
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Type = type ?? throw new ArgumentNullException(nameof(type));
+            if (String.IsNullOrEmpty(externalId)) throw new ArgumentNullException(nameof(externalId));
+            else ExternalId = externalId;
+            if (String.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            else Name = name;
+            if (String.IsNullOrEmpty(type)) throw new ArgumentNullException(nameof(type));
+            else Type = type;
         }
     }
 }

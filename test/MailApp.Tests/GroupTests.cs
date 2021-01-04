@@ -15,6 +15,7 @@ namespace MailApp.Tests
             Assert.Equal("A", group.Name);
         }
 
+
         [Fact]
         public void Ctor_List_Not_Null()
         {
@@ -116,6 +117,52 @@ namespace MailApp.Tests
             gr.AddAccount(a2);
             gr.AddAccount(a3);
             Assert.Null(gr.FindMemberByNick("nick4"));
+        }
+
+        [Fact]
+        public void IsMember_True()
+        {
+            var gr = new Group("A", owner);
+            var a1 = new Account("nick1", "a@a.pl");
+            gr.AddAccount(a1);
+            Assert.True(gr.IsMember(a1));
+        }
+
+        [Fact]
+        public void IsMember_False()
+        {
+            var gr = new Group("A", owner);
+            var a1 = new Account("nick1", "a@a.pl");
+            Assert.False(gr.IsMember(a1));
+        }
+
+        [Fact]
+        public void IsMember_Throws_ArgumentNullException()
+        {
+            var gr = new Group("A", owner);
+            Assert.Throws<ArgumentNullException>(() => gr.IsMember(default));
+        }
+
+        [Fact]
+        public void IsOwner_True()
+        {
+            var gr = new Group("A", owner);
+            Assert.True(gr.IsOwner(owner));
+        }
+
+        [Fact]
+        public void IsOwner_False()
+        {
+            var gr = new Group("A", owner);
+            var a1 = new Account("nick1", "a@a.pl");
+            Assert.False(gr.IsOwner(a1));
+        }
+
+        [Fact]
+        public void IsOwner_Throws_ArgumentNullException()
+        {
+            var gr = new Group("A", owner);
+            Assert.Throws<ArgumentNullException>(() => gr.IsOwner(default));
         }
     }
 }

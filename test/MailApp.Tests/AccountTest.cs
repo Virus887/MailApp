@@ -16,6 +16,20 @@ namespace MailApp.Tests
             var account = new Account(Nick, Email);
         }
 
+        [Fact]
+        public void Email_Ok()
+        {
+            var account = new Account(Nick, Email);
+            Assert.Equal("email@email.pl", Email);
+        }
+
+        [Fact]
+        public void Nick_Ok()
+        {
+            var account = new Account(Nick, Email);
+            Assert.Equal("nick1", Nick);
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -33,7 +47,7 @@ namespace MailApp.Tests
         }
 
         [Fact]
-        public void Ctor_EmptyNick_Throw_Too_Long_Exception()
+        public void Ctor_Throw_Too_Long_Exception()
         {
             var s = String.Join("", Enumerable.Repeat("a", Account.MaxNickLength + 1));
             Assert.Throws<ArgumentException>(() => new Account(s, Email));
