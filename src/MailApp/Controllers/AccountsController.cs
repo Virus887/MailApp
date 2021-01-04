@@ -11,15 +11,23 @@ namespace MailApp.Controllers
 {
     public class AccountsController : Controller
     {
+        const int AdminId = 1;
         private MailAppDbContext MailAppDbContext { get; }
-
-        public AccountsController(MailAppDbContext mailAppDbContext)
+        private IAccountProvider AccountProvider { get; }
+        public AccountsController(MailAppDbContext mailAppDbContext, IAccountProvider accountProvider)
         {
             MailAppDbContext = mailAppDbContext;
+            AccountProvider = accountProvider;
         }
 
         public async Task<IActionResult> Index(AccountsQuery query, CancellationToken cancellationToken)
         {
+            var currentAccount = await AccountProvider.GetAccountForCurrentUser(cancellationToken);
+            if(currentAccount.Id != AdminId)
+            {
+                return Forbid();
+            }
+
             var queryable = MailAppDbContext.Accounts
                 .Where(x => String.IsNullOrEmpty(query.Nick) || x.Nick.Contains(query.Nick))
                 .Where(x => String.IsNullOrEmpty(query.Email) || x.Email.Contains(query.Email));
@@ -43,5 +51,6 @@ namespace MailApp.Controllers
             };
             return View("List", viewModel);
         }
+
     }
 }
