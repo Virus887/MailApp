@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MailApp.Domain;
 using MailApp.Infrastructure;
 using MailApp.Models.Accounts;
 using Microsoft.AspNetCore.Mvc;
@@ -52,5 +53,24 @@ namespace MailApp.Controllers
             return View("List", viewModel);
         }
 
+        [HttpGet("Account/RemoveAccount")]
+        public async Task<IActionResult> RemoveAccount(AccountsListViewModel request, CancellationToken cancellationToken)
+        {
+            var account = await MailAppDbContext.Accounts.SingleOrDefaultAsync(x => x.Id == request.AccountId, cancellationToken);
+
+            if (account.Id == request.AccountId)
+            {
+                return Forbid();
+            }
+
+            if (account == null)
+            {
+                return BadRequest();
+            }
+
+            MailAppDbContext.Accounts.Remove(account);
+            await MailAppDbContext.SaveChangesAsync(cancellationToken);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
