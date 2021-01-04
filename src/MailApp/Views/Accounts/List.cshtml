@@ -32,9 +32,9 @@
     {
         <tr>
             <td>@account.Nick</td>
-            <td>@account.Email</td>
+            <td id="Email">@account.Email</td>
             <td>
-                <a asp-controller="Message" asp-action="NewMessage" asp-route-Receiver="@account.Email" class="btn btn-primary">Send</a>
+                <a id="Contact" asp-controller="Message" asp-action="NewMessage" asp-route-Receiver="@account.Email" class="btn btn-primary">Send</a>
             </td>
         </tr>
     }

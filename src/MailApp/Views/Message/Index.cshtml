@@ -47,6 +47,7 @@
                     <a asp-controller="Message"
                        asp-action="Details"
                        asp-route-MessageId="@message.MessageId"
+                       id="mess"
                        class="list-group-item list-group-item-action flex-column align-items-start"
                        data-ajax="message-container"
                        style="color: @(message.IsRead ? "" : "red")">

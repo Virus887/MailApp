@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Attachment\**" />
+    <Content Remove="Models\Attachment\**" />
+    <EmbeddedResource Remove="Models\Attachment\**" />
+    <None Remove="Models\Attachment\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MailApp.Infrastructure\MailApp.Infrastructure.csproj" />
   </ItemGroup>
 
@@ -17,10 +24,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Attachment" />
   </ItemGroup>
 
 </Project>
