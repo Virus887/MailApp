@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Globalization;
 using Azure.Storage.Blobs;
-using System.Threading.Tasks;
 using Hangfire;
 using MailApp.Infrastructure;
 using MailApp.Infrastructure.Notifications;
@@ -19,7 +19,9 @@ using Microsoft.Extensions.Options;
 using RestEase;
 using Microsoft.OpenApi.Models;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using Microsoft.ApplicationInsights;
 
 namespace MailApp
 {
@@ -97,6 +99,7 @@ namespace MailApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseMiddleware<ApplicationInsightsMiddleware>();
             app.UseStaticFiles();
 
             app.UseRouting();
